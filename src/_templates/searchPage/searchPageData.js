@@ -12,6 +12,7 @@ import Stack from '@mui/material/Stack';
 import { Button, Grid, IconButton } from '@mui/material';
 import ModeEditTwoToneIcon from '@mui/icons-material/ModeEditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
+import backend from '../../app/baseLink';
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#6c8f71',
@@ -36,17 +37,10 @@ function createData(srNo, id, country,institute, type, bu,start_date,status,outc
   return { srNo, id, country, institute,type, bu,start_date,status,outcome };
 }
 
-const rows = [
-  createData('1', 1589283,'India','Celera Dignostic','WIP','MR','27-05-2022','Active','Report'),
-  createData('1', 1589283,'India','Celera Dignostic','WIP','MR','27-05-2022','Active','Report'),
-  createData('1', 1589283,'India','Celera Dignostic','WIP','MR','27-05-2022','Active','Report'),
-  createData('1', 1589283,'India','Celera Dignostic','WIP','MR','27-05-2022','Active','Report'),
-  createData('1', 1589283,'India','Celera Dignostic','WIP','MR','27-05-2022','Active','Report'),
+
+
+export default function SearchPageData(props) {
  
-
-];
-
-export default function SearchPageData() {
   return (
    <div component={Paper}>
       
@@ -54,34 +48,36 @@ export default function SearchPageData() {
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
-            <StyledTableCell>Sr. No</StyledTableCell>
-            <StyledTableCell>ID </StyledTableCell>
-            <StyledTableCell>Country </StyledTableCell>
-            <StyledTableCell>Institute </StyledTableCell>
-            <StyledTableCell>Type </StyledTableCell>
-            <StyledTableCell>BU </StyledTableCell>
-            <StyledTableCell>Start Date </StyledTableCell>
-            <StyledTableCell>Status </StyledTableCell>
-            <StyledTableCell>Outcomes </StyledTableCell>
+          <StyledTableCell align="left"><b>Sr. No</b></StyledTableCell>
+            <StyledTableCell align="left"><b>ID </b></StyledTableCell>
+            <StyledTableCell align="left"><b>Title </b></StyledTableCell>
+            <StyledTableCell align="left"><b>Institute</b> </StyledTableCell>
+            <StyledTableCell align="left"><b>Objective</b> </StyledTableCell>
+            <StyledTableCell align="left"><b>Duration</b> </StyledTableCell>
+            <StyledTableCell align="left"><b>Start Date</b> </StyledTableCell>
+            <StyledTableCell align="left"><b>Status</b> </StyledTableCell>
+            <StyledTableCell align="left"><b>Funded? </b></StyledTableCell>
             <StyledTableCell>Action </StyledTableCell>
 
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <StyledTableRow key={row.id}>
+          {props.rows.map((row,index) => (
+            <StyledTableRow key={row._id}>
            
-              <StyledTableCell align="left">{row.srNo}</StyledTableCell>
-              <StyledTableCell component="th" align="left">{row.id}</StyledTableCell>
-              <StyledTableCell align="left">{row.country}</StyledTableCell>
-              <StyledTableCell align="left">{row.institute}</StyledTableCell>
-              <StyledTableCell align="left">{row.type}</StyledTableCell>
+                 
+           <StyledTableCell align="left">{index}</StyledTableCell>
+              <StyledTableCell align="left">{row._id}</StyledTableCell>
+              <StyledTableCell align="left">{row.project_title.title}</StyledTableCell>
+              <StyledTableCell align="left">{[...row.customer_details.institutes.map((data)=>data.institute_name)].toString()}</StyledTableCell>
+              <StyledTableCell align="left">{row.project_title.objective}</StyledTableCell>
 
-              <StyledTableCell align="left">{row.bu}</StyledTableCell>
+              <StyledTableCell align="left">{row.project_title.project_duration}</StyledTableCell>
 
-              <StyledTableCell align="left">{row.start_date}</StyledTableCell>
-              <StyledTableCell align="left">{row.status}</StyledTableCell>
-              <StyledTableCell align="left">{row.outcome}</StyledTableCell>
+              <StyledTableCell align="left">{row.project_title.act_start_date}</StyledTableCell>
+              <StyledTableCell align="left">{row.project_title.current_stage}</StyledTableCell>
+              <StyledTableCell align="left">{row.fi_funding?.fi_funding_status==true?"YES":"NO"}</StyledTableCell>
+
               <StyledTableCell align="left">
                 <IconButton>
                 <ModeEditTwoToneIcon color='success'/>

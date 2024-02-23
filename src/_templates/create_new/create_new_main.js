@@ -60,6 +60,7 @@ export default function CreateNewMain() {
   const [formSubmitBackdrop, setformSubmitBackdrop] = React.useState(false)
   const [snackbar, setSnackbar] = React.useState(false);
   const projectData = useSelector(state => state.projectData)
+  const userData=useSelector(state=>state.login)
 
   const handleCloseSnackbar = (event, reason) => {
     if (reason === 'clickaway') {
@@ -80,7 +81,6 @@ export default function CreateNewMain() {
   const validateFirst = () => {
 
 
-    setformSubmitBackdrop(true)
     if (!tab1Validation(projectData.projectDetails).status) {
       setValue(0)
       setSnackbar(true)
@@ -92,6 +92,7 @@ export default function CreateNewMain() {
       return
     }
 
+    setformSubmitBackdrop(true)
 
     createProject()
   }
@@ -101,6 +102,7 @@ export default function CreateNewMain() {
     const customerData = projectData.customerDetails
     const documentsData = projectData.documents
     const systemData = projectData.system
+    const fiFundingData=projectData.fiFunding
     backend.post("api/projects/add", {
       project_title: data,
       customer_details: {
@@ -109,11 +111,13 @@ export default function CreateNewMain() {
         existing_projects: customerData?.existing_projects
       },
       documents: documentsData,
-      system: systemData
+      system: systemData,
+      owner:userData.user._id,
+      // fi_funding:fiFundingData
     })
       .then(res => {
         console.log(res)
-        setTimeout(() => window.location.reload(), 1000);
+        setTimeout(() => window.location.reload(), 10000);
 
       })
 

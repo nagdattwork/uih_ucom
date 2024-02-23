@@ -27,9 +27,9 @@ export default function Home() {
 
 
     return (
-        <div >
+        <div  >
            
-            <Grid container   >
+            <Grid container style={{height:"100vh"}}  >
                 {/* <CssBaseline /> */}
                 <Grid
                     item

@@ -10,6 +10,7 @@ import styled from '@emotion/styled';
 import { useDispatch, useSelector } from 'react-redux';
 import { append } from '../features/projectData/projectData';
 import backend from '../../app/baseLink';
+import ProjectDetails2 from './projectDetails2';
 export default function ProjectDetails() {
   const dispatch = useDispatch()
   const data = useSelector(state => state.projectData)
@@ -37,7 +38,7 @@ export default function ProjectDetails() {
     projectDetails = {
       ...projectDetails, ...{
         title,
-        duration,
+        project_duration:duration,
         description:  discription,
         objective:objectives,
           hw_sw_spp:rows.map(data=>{return ({...data})}),
@@ -195,6 +196,8 @@ export default function ProjectDetails() {
           Add
         </Button>
       </div>
+
+      <ProjectDetails2/>
       <ProjectManager handleClose={handleCloseProjectManager} open={openProjectManager} managers={managers} setManagers={setManagers} />
     </div>
   )

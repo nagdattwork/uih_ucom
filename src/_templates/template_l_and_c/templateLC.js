@@ -1,8 +1,11 @@
 import { Grid, List, ListItem, ListItemButton } from '@mui/material'
-import React from 'react'
+import React, { useState } from 'react'
 
 export default function TemplateLC() {
-  return (
+    const [leagalTemp,setLeagalTemp]=useState(["Leagal Template 1","Leagal Template 2","Leagal Template 3","Leagal Template 4","Leagal Template 5"])
+    const [complianceTemp,setComplianceTemp]=useState(["Compliance Template 1","Compliance Template 2","Compliance Template 3","Compliance Template 4","Compliance Template 5"])
+
+    return (
     <div style={{margin:"10px"}}>
         <Grid container spacing={2}>
             <Grid item  xs={6}>
@@ -13,8 +16,8 @@ export default function TemplateLC() {
                 </h1>
                 <List>
                     {
-                        [1,2,3,4,6].map(()=>{
-                            return <ListItemButton> Hi </ListItemButton>
+                        leagalTemp.map((row)=>{
+                            return <ListItemButton> {row} </ListItemButton>
                         })
                     }
                 </List>
@@ -26,8 +29,8 @@ export default function TemplateLC() {
                 </h1>
                 <List>
                     {
-                        [1,2,3,4,6].map(()=>{
-                            return <ListItemButton> Hi </ListItemButton>
+                        complianceTemp.map((row)=>{
+                            return <ListItemButton> {row} </ListItemButton>
                         })
                     }
                 </List>

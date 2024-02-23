@@ -4,6 +4,7 @@ const initialState = {
   projectDetails:{},
   customerDetails:{},
   documents:{},
+  fiFunding:{}
 }
 
 
@@ -25,6 +26,10 @@ export const projectDataSlice = createSlice({
 
       if(action.payload?.system)
       state.system=action.payload.system
+
+      if(action.payload?.fiFunding)
+      state.fiFunding=action.payload.fiFunding
+
 
     
     },
