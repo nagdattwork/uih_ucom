@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const backendFunc= () => {
- const  __API__ = "http://13.232.174.92/server"
+ const  __API__ = "http://localhost:5000/"
   return axios.create({baseURL: __API__})
 }
 
