@@ -274,7 +274,7 @@ const ProjectManager = (props) => {
               return (
                 <>
                   <ListItemButton key={index} onClick={() => handleManagerSelect(data)}>
-                  <Avatar sx={{mr:2}} src ={"http://localhost:5000/"+data.image}/> {" "} {data.fname}{" "}{data.lname}
+                  <Avatar sx={{mr:2}} src ={process.env.REACT_APP_LINK+data.image}/> {" "} {data.fname}{" "}{data.lname}
                   </ListItemButton>
                  
                 </>

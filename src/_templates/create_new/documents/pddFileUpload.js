@@ -89,7 +89,7 @@ const PDDFileUpload = () => {
 
 
         try {
-            const response = await axios.post('http://localhost:5000/api/projects/document/upload/', formData, {
+            const response = await axios.post(process.env.REACT_APP_LINK+'api/projects/document/upload/', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -115,7 +115,7 @@ const PDDFileUpload = () => {
     const handleDelete = async (filename, file) => {
         if (!filename) alert("file not uploaded")
         try {
-            await axios.delete(`http://localhost:5000/test/delete/${encodeURIComponent(filename)}`);
+            await axios.delete(`${process.env.REACT_APP_LINK}test/delete/${encodeURIComponent(filename)}`);
             delete file.uploaded_path
 
             const afterDelete = [...files]
