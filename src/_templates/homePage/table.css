@@ -1,0 +1,15 @@
+.wrap-cell-content {
+    /* white-space: normal !important; Ensure text wraps onto new lines */
+  }
+
+  .even-row {
+    background-color: #f0f0f0; /* Even row color */
+  }
+  
+  .odd-row {
+    background-color: #ffffff; /* Odd row color */
+  }
+  
+  .header-style {
+    background-color: #a0a0a0; /* Header color */
+  }

@@ -3,14 +3,17 @@ import React, { useEffect, useState } from 'react'
 import SearchPageData from './searchPageData'
 import ButtonGroup from '@mui/material/ButtonGroup';
 import backend from '../../app/baseLink';
+import { useSelector } from 'react-redux';
 export default function SearchPage() {
 
   const [rows, setRows] = React.useState([])
   const [tempRows, setTempRows] = React.useState([])
+  const currentUser=useSelector((state)=>state.login)
+
   React.useEffect(() => {
-    backend.get("api/projects/").then((res) => {
+    backend.post("api/projects/getmyprojects",{id:currentUser.user._id}).then((res)=>{
+      console.log(res.data.response)
       setRows(res.data.response)
-      setTempRows(res.data.response)
     })
   }, [])
 
@@ -79,7 +82,7 @@ export default function SearchPage() {
       </Grid>
       <div container>
 
-        <SearchPageData rows={tempRows} />
+        <SearchPageData rows={rows} />
       </div>
 
 

@@ -12,6 +12,7 @@ import { createTheme } from '@mui/material/styles';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import {  useDispatch } from 'react-redux'
 import { login } from '../features/userCred/userLogin'
+import backgroundImage from '../../static/homePageImage.jpg'
 
 import backend from '../../app/baseLink'
 function Copyright(props) {
@@ -76,7 +77,7 @@ export default function Login(props) {
           sm={4}
           md={8}
           sx={{
-            backgroundImage: 'url(https://source.unsplash.com/random/?study,rediology)',
+            backgroundImage: `url(${backgroundImage})`,
             backgroundRepeat: 'no-repeat',
             backgroundColor: (t) =>
               t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
@@ -98,7 +99,7 @@ export default function Login(props) {
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Sign in Man
+              SignIn
             </Typography>
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
               <OutlinedInput

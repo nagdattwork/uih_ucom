@@ -16,9 +16,10 @@ import LaptopChromebookIcon from '@mui/icons-material/LaptopChromebook';
 import backend from '../../app/baseLink';
 import VillaIcon from '@mui/icons-material/Villa';
 import PropTypes from 'prop-types';
+import { appendEdits } from '../features/projectData/editData';
 export default function SystemDetails() {
   const dispatch=useDispatch()
-  const projectData=useSelector(state=>state.projectData)
+  const projectData=useSelector(state=>state.editData)
   //All about Systems
   const [selectedSystems, setSelectedSystems] = useState(projectData?.system?.systems?projectData.system?.systems:[])
   
@@ -70,7 +71,7 @@ useEffect(()=>{
    
   }}
 
-  dispatch(append({
+  dispatch(appendEdits({
     system:systemDetails,
   }))
 },[selectedSystems,selectedIB,serviceEngineers])

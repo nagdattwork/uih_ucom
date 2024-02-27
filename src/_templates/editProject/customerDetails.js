@@ -11,9 +11,10 @@ import TipsAndUpdatesIcon from '@mui/icons-material/TipsAndUpdates';
 import FolderZipIcon from '@mui/icons-material/FolderZip';
 import VillaIcon from '@mui/icons-material/Villa';
 import PropTypes from 'prop-types';
+import { appendEdits } from '../features/projectData/editData';
 export default function CustomerDetails() {
   const dispatch = useDispatch()
-  const projectData = useSelector(state => state.projectData)
+  const projectData = useSelector(state => state.editData)
   //All about Institutes
   const [selectedInstitutes, setSelectedInstitutes] = useState(projectData?.customerDetails?.institutes ? projectData.customerDetails.institutes : [])
 
@@ -79,7 +80,7 @@ export default function CustomerDetails() {
       }
     }
 
-    dispatch(append({
+    dispatch(appendEdits({
       customerDetails: customerDetails
     }))
   }, [selectedInstitutes, selectedProject, selectedPI])

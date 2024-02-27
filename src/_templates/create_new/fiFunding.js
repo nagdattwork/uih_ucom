@@ -3,86 +3,106 @@ import React, { useEffect, useState } from 'react'
 import Switch from '@mui/material/Switch';
 import { useDispatch, useSelector } from 'react-redux';
 import { append } from '../features/projectData/projectData';
+import AprovalFileUpload from './fifdocs/approvalFileUpload';
+import CIFileUpload from './fifdocs/ciFileUpload';
 export default function FiFunding() {
     //Global Redux
-    const dispatch=useDispatch()
-    const projectData=useSelector(state=>state.projectData)
-    const fundingDataT=projectData.fiFunding
+    const dispatch = useDispatch()
+    const projectData = useSelector(state => state.projectData)
+    const fundingDataT = projectData.fiFunding
     //Feilds
-    const [isFunded, setIsFunded] = useState(fundingDataT?.fi_funding_status?fundingDataT?.fi_funding_status:false)
-    const [whoFunded,setWhoFunded]=useState(fundingDataT?.fi_who_funded?fundingDataT?.fi_who_funded:"")
-    const [amount,setAmount]=useState(fundingDataT?.fi_uih_uii_funded_amount?fundingDataT?.fi_uih_uii_funded_amount:"")
-    const [bu,setBU]=useState(fundingDataT?.fi_uih_uii_funded_bu?fundingDataT?.fi_uih_uii_funded_bu:"")
+    const [isFunded, setIsFunded] = useState(fundingDataT?.fi_funding_status?.fi_funding_funded ? fundingDataT?.fi_funding_status?.fi_funding_funded : false)
+    const [whoFunded, setWhoFunded] = useState(fundingDataT?.fi_funding_status?.fi_funding_funding_person ? fundingDataT?.fi_funding_status?.fi_funding_funding_person : "")
+    const [amount, setAmount] = useState(fundingDataT?.fi_funding_status?.fi_funding_uih_funding_amount ? fundingDataT?.fi_funding_status?.fi_funding_uih_funding_amount : "")
+    const [bu, setBU] = useState(fundingDataT?.fi_funding_status?.fi_funding_uih_funding_bu ? fundingDataT?.fi_funding_status?.fi_funding_uih_funding_bu : "")
 
     useEffect(() => {
 
-        let fundingData=projectData.fiFunding
-        fundingData={...fundingData,...{
-            fi_funding_status:isFunded,
-            fi_uih_uii_funded_amount:amount,
-            fi_uih_uii_funded_bu:bu,
-            fi_who_funded:whoFunded
-           
-          }}
+        let fundingData = projectData.fiFunding
+        fundingData = {
+            ...fundingData, ...{
+                fi_funding_status: {
+                    fi_funding_funded: isFunded,
+                    fi_funding_uih_funding_amount: amount,
+                    fi_funding_uih_funding_bu: bu,
+                    fi_funding_funding_person: whoFunded
+                }
+
+            }
+        }
         console.log(fundingData)
-          dispatch(append({
-            fiFunding:fundingData,
-          }))
-    }, [isFunded,whoFunded,bu,amount])
+        dispatch(append({
+            fiFunding: fundingData,
+        }))
+    }, [isFunded, whoFunded, bu, amount])
     return (
         <div>
             <Grid container spacing={2} mt={2} >
                 <Typography variant='subtitle1' ml={2} component="h2" style={{ fontWeight: "bold" }}>Is this project is Funded?</Typography>
-                <Switch onClick={() => setIsFunded(!isFunded)} defaultChecked ={isFunded} />
+                <Switch onClick={() => setIsFunded(!isFunded)} defaultChecked={isFunded} />
             </Grid>
 
             <Collapse in={isFunded}>
                 <List component={Paper}>
                     <ListItem>
                         <Grid container spacing={2} mt={2} >
+                            <Grid item xs={2}>
                             <Typography variant='subtitle1' ml={2} component="h2" style={{ fontWeight: "bold" }}>Who is Funded</Typography>
+
+                            </Grid>
+                            <Grid item xs={4}>
                             <Autocomplete
                                 disablePortal
                                 id="combo-box-demo"
                                 value={whoFunded}
-                                options={["UIH", "OTHERS"]}
+                                options={["UIH", "UII", "OTHERS"]}
                                 size='small'
                                 onInputChange={(event, newInputValue) => {
                                     setWhoFunded(newInputValue);
-                                  }}
-                                sx={{ width: 300, ml: 2 }}
+                                }}
+                               
                                 renderInput={(params) => <TextField {...params} label="Funding Company" />}
                             />
-                        </Grid>
-                    </ListItem>
+                            </Grid>
+                            <Grid item xs={2}>
+                                <Typography variant='subtitle1' ml={2} component="h2" style={{ fontWeight: "bold" }}>If UIH/ UII funded</Typography>
 
-                    <ListItem>
-                        <Grid container spacing={2} mt={2} >
-                            <Typography variant='subtitle1' ml={2} component="h2" style={{ fontWeight: "bold" }}>If UIH/ UII funded</Typography>
-                          
-                            <OutlinedInput placeholder='Amount' value={amount} onChange={(e)=>setAmount(e.target.value)} size='small' style={{marginLeft:"12px"}}/>
-                          
-                            <OutlinedInput placeholder='BU'  value={bu} onChange={(e)=>setBU(e.target.value)} size='small' style={{marginLeft:"12px"}}/>
-                            <Button variant='contained' style={{marginLeft:"12px"}}>Select Approval File</Button>
-                            
-                            <Button variant='contained' style={{marginLeft:"12px"}}>Selected File</Button>
-                            <Button variant='contained' style={{marginLeft:"12px"}}>C</Button>
+                            </Grid>                   
+                             <Grid item xs={2}>
 
-                        </Grid>
-                    </ListItem>
-
-                    <ListItem>
-                        <Grid container spacing={2} mt={2} >
-                            <Typography variant='subtitle1' ml={2} component="h2" style={{ fontWeight: "bold" }}>Customer Invoice</Typography>
-                          
+                                <OutlinedInput placeholder='Amount' value={amount} onChange={(e) => setAmount(e.target.value)} size='small' style={{ marginLeft: "12px" }} />
+                            </Grid>
+                            <Grid item xs={2}>
+                                <OutlinedInput placeholder='BU' value={bu} onChange={(e) => setBU(e.target.value)} size='small' style={{ marginLeft: "12px" }} />
+                            </Grid>
                            
-                            <Button variant='contained' style={{marginLeft:"12px"}}>Select  File</Button>
-                            
-                            <Button variant='contained' style={{marginLeft:"12px"}}>Selected File</Button>
-                            <Button variant='contained' style={{marginLeft:"12px"}}>C</Button>
-
                         </Grid>
                     </ListItem>
+
+                    <ListItem>
+                        <Grid container spacing={2} mt={2} >
+                        <Grid item xs={2}>
+                            <Typography variant='subtitle1' ml={2} component="h2" style={{ fontWeight: "bold" }}>Approval Document</Typography>
+
+                            </Grid>
+                        <Grid item xs={4}>
+                                <AprovalFileUpload />
+
+                            </Grid>
+                            <Grid item xs={2}>
+                            <Typography variant='subtitle1' ml={2} component="h2" style={{ fontWeight: "bold" }}>Customer Invoce</Typography>
+
+                            </Grid>
+                        <Grid item xs={2}>
+                                {/* <AprovalFileUpload /> */}
+                                    <CIFileUpload/>
+                            </Grid>
+                        </Grid>
+                        
+
+                    </ListItem>
+
+                  
                 </List>
             </Collapse>
         </div>

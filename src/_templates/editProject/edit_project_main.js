@@ -23,6 +23,7 @@ import backend from '../../app/baseLink';
 import axios from 'axios';
 import FiFunding from './fiFunding';
 import { useLocation } from 'react-router';
+import editData, { appendEdits } from '../features/projectData/editData';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -57,12 +58,31 @@ function a11yProps(index) {
   };
 }
 
-export default function CreateNewMain() {
+export default function EditProjectMain(props) {
 
  
   const [formSubmitBackdrop, setformSubmitBackdrop] = React.useState(false)
   const [snackbar, setSnackbar] = React.useState(false);
-  const projectData = useSelector(state => state.projectData)
+  const projectData = useSelector(state => state.editData)
+  // const locationData=useLocation()
+  // const [editData,setEditData]=React.useState(locationData.state.data)
+  // const dispatch=useDispatch()
+  // console.log(editData)
+
+  // React.useEffect(()=>{
+  //   // const initialState = {
+  //   //   projectDetails:{},
+  //   //   customerDetails:{},
+  //   //   documents:{},
+  //   //   system:{},
+  //   //   fiFunding:{},
+  //   //   projectId:""
+  //   // }
+  //   dispatch(appendEdits({
+  //     projectDetails:editData.project_title,
+  //     customerDetails:editData.customer_details
+  //   }))
+  // },[dispatch])
   const userData=useSelector(state=>state.login)
 
   const handleCloseSnackbar = (event, reason) => {
@@ -74,7 +94,22 @@ export default function CreateNewMain() {
   };
   const [value, setValue] = React.useState(0);
   const [index, setIndex] = React.useState(0)
+  const [used,setUsed]=React.useState(0)
 
+  React.useEffect(()=>{
+
+   if(used<=1){
+    if (value==0)
+    { setValue(1);
+     }
+     if (value==1)
+     setValue(0)
+
+     setUsed(used+1)
+   }
+  
+   
+  },[value,used])
   const handleChange = (event, newValue) => {
 
 
@@ -107,10 +142,17 @@ export default function CreateNewMain() {
     const systemData = projectData.system
     const fiFundingData=projectData.fiFunding
     const fiFundingDocs=projectData.fiFundingDocuments
+    let approvalfile=fiFundingData?.fi_funding_status?.fi_funding_uih_funding_bu_aprroval===""?"":","
+    if(fiFundingDocs?.fi_funding_uih_funding_bu_aprroval?.map(data=>data.uploaded_path).toString()!=="" && fiFundingDocs?.fi_funding_uih_funding_bu_aprroval?.map(data=>data.uploaded_path).toString()!==undefined)
+    approvalfile=fiFundingData?.fi_funding_status?.fi_funding_uih_funding_bu_aprroval+approvalfile+fiFundingDocs?.fi_funding_uih_funding_bu_aprroval?.map(data=>data.uploaded_path).toString()
+    let cifile=fiFundingData?.fi_funding_status?.fi_funding_customer_invoice===""?"":","
+    if(fiFundingDocs?.fi_funding_customer_invoice?.map(data=>data.uploaded_path).toString()!=="" && fiFundingDocs?.fi_funding_customer_invoice?.map(data=>data.uploaded_path).toString()!=undefined)
+    cifile=fiFundingData?.fi_funding_status?.fi_funding_customer_invoice+cifile+fiFundingDocs?.fi_funding_customer_invoice?.map(data=>data.uploaded_path).toString()
 
-    
-    backend.post("api/projects/add", {
-      project_title: {
+      console.log(fiFundingDocs?.fi_funding_uih_funding_bu_aprroval?.map(data=>data.uploaded_path).toString())
+      // alert("wait")
+    backend.post("api/projects/update", {
+      project_title:  {
         title:data.title,
             description:data.description,
             objective:data.objective,
@@ -122,19 +164,16 @@ export default function CreateNewMain() {
             act_start_date:data.act_start_date,
             end_date:data.end_date,
             hw_sw_spp:data?.hw_sw_spp
+
     
       },
+      projectId:projectData.projectId,
       customer_details: {
         institutes: customerData?.institutes?.map(data => data._id),
         pi_details: customerData?.pi_details?.map(data => data._id),
         existing_projects: customerData?.existing_projects
       },
-      documents: {
-        pdd_document:documentsData?.pdd_document?.map(data=>data.uploaded_path).toString(),
-        draft_agreement:documentsData?.draft_agreement?.map(data=>data.uploaded_path).toString(),
-        signed_agreement:documentsData?.signed_agreement?.map(data=>data.uploaded_path).toString(),
-        others:documentsData?.others?.map(data=>data.uploaded_path).toString()
-      },
+      documents: documentsData,
       system: systemData,
       owner:userData.user._id,
       fi_funding:{
@@ -143,16 +182,20 @@ export default function CreateNewMain() {
         fi_funding_funding_person:fiFundingData?.fi_funding_status?.fi_funding_funding_person,
         fi_funding_uih_funding_amount:fiFundingData?.fi_funding_status?.fi_funding_uih_funding_amount,
         fi_funding_uih_funding_bu:fiFundingData?.fi_funding_status?.fi_funding_uih_funding_bu,
-        fi_funding_uih_funding_bu_aprroval:fiFundingDocs?.fi_funding_uih_funding_bu_aprroval?.map(data=>data.uploaded_path).toString(),
-        fi_funding_customer_invoice:fiFundingDocs?.fi_funding_customer_invoice?.map(data=>data.uploaded_path).toString()
+        fi_funding_uih_funding_bu_aprroval:approvalfile,
+        fi_funding_customer_invoice:cifile
        }
+      }
 
-        }
     })
       .then(res => {
         console.log(res)
+        setformSubmitBackdrop(false)
         setTimeout(() => window.location.reload(), 1000);
 
+      })
+      .catch(err=>{
+        console.log(err)
       })
 
     //  setformSubmitBackdrop(false)
@@ -165,12 +208,14 @@ export default function CreateNewMain() {
       <div
 
       >
+
+      
         <Backdrop
           sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={formSubmitBackdrop}
         >
           <CircularProgress style={{ marginRight: "5px" }} color="inherit" />
-          Submitting The Form
+          Updating The Form
         </Backdrop>
         <Tabs
           textColor="primary"
@@ -214,15 +259,14 @@ export default function CreateNewMain() {
       </div>
       <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={5} >
         <BottomNavigation style={{ marginBottom: "-4px", marginTop: "4px" }}>
+        {/* <Typography> {editData.project_title.title}</Typography> */}
 
-          <Fab variant="extended" color='primary' style={{marginRight:"10px"}}>
-            <SaveAsIcon sx={{ mr: 1 }} /> Save
-          </Fab>
+         
           <Fab variant="extended" color='info' onClick={validateFirst}>
             <PublishIcon sx={{ mr: 1 }} />
             
             
-            Submit
+            Update
           </Fab>
 
         </BottomNavigation>

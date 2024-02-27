@@ -11,14 +11,12 @@ const initialState = {
 }
 
 
-
-
-export const projectDataSlice = createSlice({
+export const editDataSlice = createSlice({
   name: 'projectData',
   initialState,
    
   reducers: {
-    append: (state,action) => {
+    appendEdits: (state,action) => {
         
       if(action.payload?.projectDetails)
       state.projectDetails=action.payload.projectDetails
@@ -32,36 +30,26 @@ export const projectDataSlice = createSlice({
       if(action.payload?.system)
       state.system=action.payload.system
 
-      
+      if(action.payload?.fiFunding)
+      state.fiFunding=action.payload.fiFunding
+
       
       if(action.payload?.fiFundingDocuments)
       state.fiFundingDocuments=action.payload.fiFundingDocuments
 
-      if(action.payload?.fiFunding)
-      state.fiFunding=action.payload.fiFunding
+      if(action.payload?.projectId)
+      state.projectId=action.payload.projectId
 
 
     
     },
 
-    makeEmpty:(state,action)=>{
-      state.projectDetails={}
-      state.customerDetails={}
-      state.documents={}
-      state.system= {}
-      state.fiFunding={}
-
-     
-
-
-
-
-    }
+ 
    
    
   },
 })
 
-export const { append,makeEmpty } = projectDataSlice.actions
+export const { appendEdits } = editDataSlice.actions
 
-export default projectDataSlice.reducer
+export default editDataSlice.reducer

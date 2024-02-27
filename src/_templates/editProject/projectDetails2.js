@@ -2,10 +2,11 @@ import { Autocomplete, Grid, ListItem, OutlinedInput, TextField, Typography } fr
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { append } from '../features/projectData/projectData';
+import { appendEdits } from '../features/projectData/editData';
 
 export default function ProjectDetails2() {
     const [stage,setStage]=useState(["Draft","On-going","Completed","Terminated"])
-    const data=useSelector(state=>state.projectData)
+    const data=useSelector(state=>state.editData)
     const pr_data=data.projectDetails
 
     const [stagevalue,setStageValue]=useState(pr_data?.current_stage?pr_data?.current_stage:"")
@@ -25,7 +26,7 @@ export default function ProjectDetails2() {
 
             }
         }
-        dispatch(append({
+        dispatch(appendEdits({
             projectDetails:projectDetails
         }))
     },[stagevalue,expDate,startDate,endDate])

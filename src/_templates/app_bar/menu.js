@@ -10,7 +10,7 @@ export default function BasicMenu(props) {
 
   const dispatch=useDispatch()
   const [anchorEl, setAnchorEl] = React.useState(null);
-  console.log("Inside Menu bar",user)
+  // console.log("Inside Menu bar",user)
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -29,7 +29,7 @@ export default function BasicMenu(props) {
         onClick={handleClick}
         color='success'
       >
-       <Avatar alt="Remy Sharp" src={"http://13.232.174.92/"+user.user.image } />
+       <Avatar alt="Remy Sharp" src={"http://localhost:5000/"+user.user.image } />
       </IconButton>
       <Menu
         id="basic-menu"
@@ -40,7 +40,7 @@ export default function BasicMenu(props) {
           'aria-labelledby': 'basic-button',
         }}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
+        <MenuItem  onClick={handleClose}>Profile</MenuItem>
         <MenuItem onClick={handleClose}>My account</MenuItem>
 
         <MenuItem onClick={()=>{

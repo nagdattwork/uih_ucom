@@ -17,25 +17,37 @@ import Button from '@mui/material/Button';
 import BasicMenu from './menu';
 import { green } from '@mui/material/colors';
 import { Outlet, Link } from "react-router-dom";
-import { makeStyles } from '@mui/material';
+import { createTheme, makeStyles } from '@mui/material';
+import { ThemeProvider } from '@emotion/react';
 
 const drawerWidth = 240;
 const navItems =[
-  { title: 'Home', link: '/' },
-  { title: 'Create New', link: '/createnew' },
-  { title: 'Search & Edit', link: 'search' },
-  { title: 'Dashboard', link: 'dashboard' },
-  { title: 'Templates- L&C', link: 'templates' }
+  { title: 'Home', link: '/',state:{caller:"home",data:null} },
+  { title: 'Create New', link: '/createnew',state:{caller:"create_new",data:null} },
+  { title: 'Search & Edit', link: 'search',state:{caller:"search",data:null} },
+  { title: 'Dashboard', link: 'dashboard',state:{caller:"dashboard",data:null} },
+  { title: 'Templates- L&C', link: 'templates',state:{caller:"templates",data:null} },
+  { title: 'Tester - FILE ', link: 'filepush',state:{caller:"tester",data:null} }
+
 ]
-// const useStyles = makeStyles((theme) => ({
-//   selectedButton: {
-//     color: theme.palette.success.main, // Change the color for the selected button
-//   },
-// }));
+const theme = createTheme({
+  palette: {
+    
+    success: {
+      main: '#3f51b5', // Change this to your desired primary color
+    },
+    primary: {
+      main: '#3f51b5', // Change this to your desired primary color
+    },
+    info:{
+      main:"#1a237e"
+    }
+  },
+});
 function AppBarMain(props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
-
+  const [selected,setSelected]=React.useState(0)
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
@@ -48,7 +60,11 @@ function AppBarMain(props) {
       <Divider />
       <List>
         {navItems.map((item,index) => (
-          <Link to={item.link}>
+          <Link 
+          to={item.link}
+          state={item.state}
+          
+          >
           <ListItem key={index} disablePadding>
             <ListItemButton sx={{ textAlign: 'center' }}>
               <ListItemText primary={item.title} />
@@ -89,21 +105,34 @@ function AppBarMain(props) {
           >
             {/* MUI */}
           </Typography>
+          <ThemeProvider theme={theme}>
+
           <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
             {navItems.map((item,index) => (
-                 <Link to={item.link}>
+                   <Link 
+                   to={item.link}
+                   state={item.state}
+                   
+                   >
               <Button key={index}   
               sx={{color:"#fff"}}
               // color={selectedButton === item ? 'primary' : 'error'}
-              color={selectedButton === item.title ? 'primary' : 'error'}
              
-              onClick={() => handleButtonClick(item.title)}
+             
+              onClick={() =>{
+                setSelected(index)
+                handleButtonClick(item.title)}}
+              variant={selected===index?'contained':"outlined"}
+              color={selected===index?'info':'success'}
+              
               >
                 {item.title}
               </Button>
               </Link>
             ))}
           </Box>
+</ThemeProvider>
+         
           <BasicMenu setLogin={props.setLogin}/>
         </Toolbar>
       </AppBar>

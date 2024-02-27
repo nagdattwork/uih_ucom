@@ -11,9 +11,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { append } from '../features/projectData/projectData';
 import backend from '../../app/baseLink';
 import ProjectDetails2 from './projectDetails2';
+import { appendEdits } from '../features/projectData/editData';
 export default function ProjectDetails() {
   const dispatch = useDispatch()
-  const data = useSelector(state => state.projectData)
+  const data = useSelector(state => state.editData)
   const dataDetails = data.projectDetails
   // Main feilds
   const [title, setTitle] = React.useState(dataDetails.title)
@@ -47,7 +48,7 @@ export default function ProjectDetails() {
         project_manager :managers.map(data=>{return data}),
       }
     }
-    dispatch(append({
+    dispatch(appendEdits({
       projectDetails: projectDetails
     }))
 

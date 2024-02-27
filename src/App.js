@@ -10,6 +10,27 @@ import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { login as loginRedux}  from './_templates/features/userCred/userLogin';
 import { Box, CircularProgress } from '@mui/material';
+
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import EditProjectMain from './_templates/editProject/edit_project_main';
+import EditMiddle from './_templates/editProject/editMiddle';
+import FileUpload from './_templates/TesterTab/fileUpload';
+
+// Define a custom theme
+const theme = createTheme({
+  palette: {
+    
+    success: {
+      main: '#3f51b5', // Change this to your desired primary color
+    },
+    primary: {
+      main: '#3f51b5', // Change this to your desired primary color
+    },
+    info:{
+      main:"#00695c"
+    }
+  },
+});
 function App() {
   const [login,setLogin]=useState(false)
   const [loading,setLoading]=useState(true)
@@ -19,7 +40,7 @@ function App() {
     if(localStorage.getItem('user'))
     {
     const temp=JSON.parse(localStorage.getItem('user'))
-    console.log(temp)
+    // console.log(temp)
     dispatch(loginRedux({
       loggedIn:temp.loggedIn,
         user:temp.user,
@@ -31,11 +52,17 @@ function App() {
   setLoading(false)
   },[])
   return (
-   <div>
+   <ThemeProvider theme={theme}
+   
+   style={{
+    backgroundColor : 'green',
+  color : 'white',
+  height : '100%'
+   }}>
      {loading?(  <Box sx={{ display: 'flex',alignItems: 'center', justifyContent: 'center',height:"100vh" }}>
       <CircularProgress />
     </Box>):
-     (<div style={{backgroundColor:"#f6fdf7"}}>
+     (<div >
       
      {
        login?(<BrowserRouter>
@@ -47,6 +74,9 @@ function App() {
              <Route path="dashboard" element={<Dashboard />} />
              <Route path="search" element={<SearchPage />} />
              <Route path="templates" element={<TemplateLC />} />
+             <Route path="editproject" element={<EditMiddle />} />
+             <Route path="filepush" element={<FileUpload />} />
+
          </Routes>
        </BrowserRouter>):(<Login setLogin={setLogin}/>)
      }
@@ -54,7 +84,7 @@ function App() {
      </div>)
      
     }
-   </div>
+   </ThemeProvider>
   );
 }
 

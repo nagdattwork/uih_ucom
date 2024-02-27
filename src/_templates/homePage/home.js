@@ -11,7 +11,7 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { createTheme, makeStyles, ThemeProvider } from '@mui/material/styles';
 import { purple } from '@mui/material/colors';
 import OutlinedInput from '@mui/material/OutlinedInput';
 
@@ -20,6 +20,11 @@ import NavigationHome from './navigation_home';
 import TableHome from './table_home';
 import { useSelector, useDispatch } from 'react-redux'
 import { logout } from '../features/userCred/userLogin'
+import ModeEditTwoToneIcon from '@mui/icons-material/ModeEditTwoTone';
+import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
+import { DataGrid } from '@mui/x-data-grid';
+import { IconButton } from '@mui/material';
+import homepageImage from '../../static/loginImage.png'
 const defaultTheme = createTheme();
 
 export default function Home() {
@@ -29,7 +34,7 @@ export default function Home() {
     return (
         <div  >
            
-            <Grid container style={{height:"100vh"}}  >
+            <Grid container  >
                 {/* <CssBaseline /> */}
                 <Grid
                     item
@@ -37,12 +42,13 @@ export default function Home() {
                     sm={4}
                     md={4}
                     sx={{
-                        backgroundImage: 'url(https://source.unsplash.com/random/?study,rediology)',
+                        backgroundImage: `url(${homepageImage})`,
                         backgroundRepeat: 'no-repeat',
                         backgroundColor: (t) =>
                             t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
+                        height:"100vh"
                     }}
                   
   
@@ -54,7 +60,7 @@ export default function Home() {
 
                         <Grid container spacing={2}   justifyContent="flex-end"   alignItems="flex-end" textAlign={'right'}>
                             <Grid item justifyContent="flex-end">
-                                <h1>Welcome to uCOM</h1>
+                                <h1>Welcome to GS Collaborations</h1>
                                 <p>A web based tool for collaboration management</p>
                             </Grid>
                             {/* <Grid item xs={3}>
@@ -63,7 +69,7 @@ export default function Home() {
                         </Grid>
 
                         {/* <NavigationHome/> */}
-                        <Grid container style={{backgroundColor:'#a2daaa'}} spacing={2}>
+                        <Grid container style={{backgroundColor:'#9fa8da'}} spacing={2}>
                             <Grid item xs={8}  style={{padding:"5px"}} >
                                 <h4 style={{margin:"0px",marginTop:"8px",marginLeft:"8px"}} >Overview of latest projects</h4>
                             </Grid>
@@ -82,3 +88,9 @@ export default function Home() {
         </div>
     );
 }
+
+
+
+
+
+
