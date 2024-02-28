@@ -222,10 +222,10 @@ export default function EditProjectMain(props) {
         existing_projects: customerData?.existing_projects
       },
       documents: {
-        pdd_document: pdd_docs,
-        draft_agreement: da_docs,
-        signed_agreement:sa_docs,
-        others:others
+        pdd_document: pdd_docs===undefined?"":pdd_docs,
+        draft_agreement: da_docs===undefined?"":da_docs,
+        signed_agreement:sa_docs===undefined?"":sa_docs,
+        others:others===undefined?"":others
       },
       system: systemData,
       owner: userData.user._id,
