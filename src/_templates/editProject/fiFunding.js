@@ -14,14 +14,25 @@ export default function FiFunding() {
     const dispatch = useDispatch()
     const projectData = useSelector(state => state.editData)
     const fundingDataT = projectData.fiFunding
-    console.log(fundingDataT)
     //Feilds
     const [isFunded, setIsFunded] = useState(fundingDataT?.fi_funding_status?.fi_funding_funded ? fundingDataT?.fi_funding_status?.fi_funding_funded : false)
     const [whoFunded, setWhoFunded] = useState(fundingDataT?.fi_funding_status?.fi_funding_funding_person ? fundingDataT?.fi_funding_status?.fi_funding_funding_person : "")
     const [amount, setAmount] = useState(fundingDataT?.fi_funding_status?.fi_funding_uih_funding_amount ? fundingDataT?.fi_funding_status?.fi_funding_uih_funding_amount : "")
     const [bu, setBU] = useState(fundingDataT?.fi_funding_status?.fi_funding_uih_funding_bu ? fundingDataT?.fi_funding_status?.fi_funding_uih_funding_bu : "")
-    const [oldApprovalFiles, setOldApprovalFiles] = useState(fundingDataT?.fi_funding_status?.fi_funding_uih_funding_bu_aprroval ? fundingDataT?.fi_funding_status?.fi_funding_uih_funding_bu_aprroval.split(",") : [])
-    const [oldCustomerInvoices, setOldCustomerInvoices] = useState(fundingDataT?.fi_funding_status?.fi_funding_customer_invoice ? fundingDataT?.fi_funding_status?.fi_funding_customer_invoice.split(",") : [])
+
+
+    let temp=(fundingDataT?.fi_funding_status?.fi_funding_uih_funding_bu_aprroval?.split(","))
+    temp=temp?.filter((file)=>{return file!=""} )
+
+
+
+    const [oldApprovalFiles, setOldApprovalFiles] = useState(temp?temp:[])
+
+
+    let temp2=(fundingDataT?.fi_funding_status?.fi_funding_customer_invoice?.split(","))
+    temp2=temp2?.filter((file)=>{return file!=""} )
+
+    const [oldCustomerInvoices, setOldCustomerInvoices] = useState(temp2?temp2:[])
     useEffect(() => {
 
         let fundingData = projectData.fiFunding
@@ -39,7 +50,6 @@ export default function FiFunding() {
 
             }
         }
-        console.log(fundingData)
         dispatch(appendEdits({
             fiFunding: fundingData,
         }))
@@ -54,7 +64,6 @@ export default function FiFunding() {
         try {
             await backend.delete(`test/delete/${encodeURIComponent(filename)}`);
             setOldApprovalFiles((prevItems) => prevItems.filter((_, index) => index !== indexToDelete));          
-              console.log(oldApprovalFiles)
             // oldApprovalFiles(newArr);
 
         } catch (error) {
@@ -68,7 +77,6 @@ export default function FiFunding() {
         try {
             await backend.delete(`test/delete/${encodeURIComponent(filename)}`);
             setOldCustomerInvoices((prevItems) => prevItems.filter((_, index) => index !== indexToDelete));          
-              console.log(oldApprovalFiles)
             // oldApprovalFiles(newArr);
 
         } catch (error) {

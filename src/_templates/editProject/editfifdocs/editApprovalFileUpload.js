@@ -28,7 +28,6 @@ const VisuallyHiddenInput = styled('input')({
 const EditAprovalFileUpload = () => {
     const data=useSelector(state=>state.editData)
     const docs=data.fiFundingDocuments
-    console.log(data?.fiFunding?.fi_funding_status)
     
     const [files, setFiles] = useState(docs?.fi_funding_uih_funding_bu_aprroval?[...docs?.fi_funding_uih_funding_bu_aprroval]:[]);
     const [loading, setLoading] = useState(false);
@@ -45,7 +44,6 @@ const EditAprovalFileUpload = () => {
             fi_funding_uih_funding_bu_aprroval:uploadedFiles.map((data) => {return (data) })
             }
         }
-        console.log(documentsData)
         
         dispatch(appendEdits({
             fiFundingDocuments:documentsData

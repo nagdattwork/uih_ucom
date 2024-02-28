@@ -60,7 +60,7 @@ function a11yProps(index) {
 
 export default function EditProjectMain(props) {
 
- 
+
   const [formSubmitBackdrop, setformSubmitBackdrop] = React.useState(false)
   const [snackbar, setSnackbar] = React.useState(false);
   const projectData = useSelector(state => state.editData)
@@ -83,7 +83,7 @@ export default function EditProjectMain(props) {
   //     customerDetails:editData.customer_details
   //   }))
   // },[dispatch])
-  const userData=useSelector(state=>state.login)
+  const userData = useSelector(state => state.login)
 
   const handleCloseSnackbar = (event, reason) => {
     if (reason === 'clickaway') {
@@ -94,22 +94,22 @@ export default function EditProjectMain(props) {
   };
   const [value, setValue] = React.useState(0);
   const [index, setIndex] = React.useState(0)
-  const [used,setUsed]=React.useState(0)
+  const [used, setUsed] = React.useState(0)
 
-  React.useEffect(()=>{
+  React.useEffect(() => {
 
-   if(used<=1){
-    if (value==0)
-    { setValue(1);
-     }
-     if (value==1)
-     setValue(0)
+    if (used <= 1) {
+      if (value == 0) {
+        setValue(1);
+      }
+      if (value == 1)
+        setValue(0)
 
-     setUsed(used+1)
-   }
-  
-   
-  },[value,used])
+      setUsed(used + 1)
+    }
+
+
+  }, [value, used])
   const handleChange = (event, newValue) => {
 
 
@@ -140,61 +140,118 @@ export default function EditProjectMain(props) {
     const customerData = projectData.customerDetails
     const documentsData = projectData.documents
     const systemData = projectData.system
-    const fiFundingData=projectData.fiFunding
-    const fiFundingDocs=projectData.fiFundingDocuments
-    let approvalfile=fiFundingData?.fi_funding_status?.fi_funding_uih_funding_bu_aprroval===""?"":","
-    if(fiFundingDocs?.fi_funding_uih_funding_bu_aprroval?.map(data=>data.uploaded_path).toString()!=="" && fiFundingDocs?.fi_funding_uih_funding_bu_aprroval?.map(data=>data.uploaded_path).toString()!==undefined)
-    approvalfile=fiFundingData?.fi_funding_status?.fi_funding_uih_funding_bu_aprroval+approvalfile+fiFundingDocs?.fi_funding_uih_funding_bu_aprroval?.map(data=>data.uploaded_path).toString()
-    let cifile=fiFundingData?.fi_funding_status?.fi_funding_customer_invoice===""?"":","
-    if(fiFundingDocs?.fi_funding_customer_invoice?.map(data=>data.uploaded_path).toString()!=="" && fiFundingDocs?.fi_funding_customer_invoice?.map(data=>data.uploaded_path).toString()!=undefined)
-    cifile=fiFundingData?.fi_funding_status?.fi_funding_customer_invoice+cifile+fiFundingDocs?.fi_funding_customer_invoice?.map(data=>data.uploaded_path).toString()
+    const fiFundingData = projectData.fiFunding
+    const fiFundingDocs = projectData.fiFundingDocuments
 
-      console.log(fiFundingDocs?.fi_funding_uih_funding_bu_aprroval?.map(data=>data.uploaded_path).toString())
-      // alert("wait")
-    backend.post("api/projects/update", {
-      project_title:  {
-        title:data.title,
-            description:data.description,
-            objective:data.objective,
-            project_duration:data.project_duration,
-            current_stage:data.current_stage,
-            project_manager: data?.project_manager?.map(data => data._id),
-            // ethics_irb_approval:data.ethics_irb_approval,
-            exp_date:data.exp_date,
-            act_start_date:data.act_start_date,
-            end_date:data.end_date,
-            hw_sw_spp:data?.hw_sw_spp
 
+    let approvalfile = fiFundingData?.fi_funding_status?.fi_funding_uih_funding_bu_aprroval
+    console.log(approvalfile)
+
+    approvalfile += fiFundingData?.fi_funding_status?.fi_funding_uih_funding_bu_aprroval === "" ? "" : ","
+    if (fiFundingDocs?.fi_funding_uih_funding_bu_aprroval?.map(data => data.uploaded_path).toString() !== "" && fiFundingDocs?.fi_funding_uih_funding_bu_aprroval?.map(data => data.uploaded_path).toString() !== undefined)
+      approvalfile = approvalfile + fiFundingDocs?.fi_funding_uih_funding_bu_aprroval?.map(data => data.uploaded_path).toString()
+
+
+    let cifile = fiFundingData?.fi_funding_status?.fi_funding_customer_invoice
+    cifile += fiFundingData?.fi_funding_status?.fi_funding_customer_invoice === "" ? "" : ","
+    if (fiFundingDocs?.fi_funding_customer_invoice?.map(data => data.uploaded_path).toString() !== "" && fiFundingDocs?.fi_funding_customer_invoice?.map(data => data.uploaded_path).toString() != undefined)
+      cifile = cifile + fiFundingDocs?.fi_funding_customer_invoice?.map(data => data.uploaded_path).toString()
+
+    // alert("wait")
+    console.log(fiFundingData?.fi_funding_status?.fi_funding_uih_funding_bu_aprroval + fiFundingDocs?.fi_funding_uih_funding_bu_aprroval?.map(data => data.uploaded_path).toString())
+    console.log(approvalfile)
+    // console.log(fiFundingData?.fi_funding_status?.fi_funding_customer_invoice+fiFundingDocs?.fi_funding_customer_invoice?.map(data=>data.uploaded_path).toString())
+    // console.log(cifile)
+    //same like above all documents
+    const prevData = projectData.prevDocuments
+    //pdd docs
+    // console.log(prevData)
+    // alert(documentsData.toString())
+    let pdd_docs = prevData?.pdd_document
+    pdd_docs += prevData?.pdd_document === "" ? "" : ","
+    if(pdd_docs===undefined) pdd_docs=""
+
+    if (documentsData?.pdd_document?.map(data => data.uploaded_path).toString() !== "" && documentsData?.pdd_document?.map(data => data.uploaded_path).toString() != undefined)
+      pdd_docs = pdd_docs + documentsData?.pdd_document?.map(data => data.uploaded_path).toString()
+
+
+    let da_docs = prevData?.draft_agreement
+    da_docs += prevData?.draft_agreement === "" ? "" : ","
+    if(da_docs===undefined) da_docs=""
+
+    if (documentsData?.draft_agreement?.map(data => data.uploaded_path).toString() !== "" && documentsData?.draft_agreement?.map(data => data.uploaded_path).toString() != undefined)
+      da_docs = da_docs + documentsData?.draft_agreement?.map(data => data.uploaded_path).toString()
     
+      let sa_docs = prevData?.signed_agreement
+      sa_docs += prevData?.signed_agreement === "" ? "" : ","
+      if(sa_docs===undefined) sa_docs=""
+
+      if (documentsData?.signed_agreement?.map(data => data.uploaded_path).toString() !== "" && documentsData?.signed_agreement?.map(data => data.uploaded_path).toString() != undefined)
+      sa_docs = sa_docs + documentsData?.signed_agreement?.map(data => data.uploaded_path).toString()
+
+
+      let others = prevData?.others
+      others += prevData?.others === "" ? "" : ","
+      if(others===undefined) others=""
+
+      if (documentsData?.others?.map(data => data.uploaded_path).toString() !== "" && documentsData?.others?.map(data => data.uploaded_path).toString() != undefined)
+      others = others + documentsData?.others?.map(data => data.uploaded_path).toString()
+      
+
+
+    backend.post("api/projects/update", {
+      project_title: {
+        title: data.title,
+        description: data.description,
+        objective: data.objective,
+        project_duration: data.project_duration,
+        current_stage: data.current_stage,
+        project_manager: data?.project_manager?.map(data => data._id),
+        // ethics_irb_approval:data.ethics_irb_approval,
+        exp_date: data.exp_date,
+        act_start_date: data.act_start_date,
+        end_date: data.end_date,
+        hw_sw_spp: data?.hw_sw_spp
+
+
       },
-      projectId:projectData.projectId,
+      projectId: projectData.projectId,
       customer_details: {
         institutes: customerData?.institutes?.map(data => data._id),
         pi_details: customerData?.pi_details?.map(data => data._id),
         existing_projects: customerData?.existing_projects
       },
-      documents: documentsData,
+      documents: {
+        pdd_document: pdd_docs,
+        draft_agreement: da_docs,
+        signed_agreement:sa_docs,
+        others:others
+      },
       system: systemData,
-      owner:userData.user._id,
-      fi_funding:{
-        fi_funding_status:{
-        fi_funding_funded:fiFundingData?.fi_funding_status?.fi_funding_funded,
-        fi_funding_funding_person:fiFundingData?.fi_funding_status?.fi_funding_funding_person,
-        fi_funding_uih_funding_amount:fiFundingData?.fi_funding_status?.fi_funding_uih_funding_amount,
-        fi_funding_uih_funding_bu:fiFundingData?.fi_funding_status?.fi_funding_uih_funding_bu,
-        fi_funding_uih_funding_bu_aprroval:approvalfile,
-        fi_funding_customer_invoice:cifile
-       }
+      owner: userData.user._id,
+      fi_funding: {
+        fi_funding_status: {
+          fi_funding_funded: fiFundingData?.fi_funding_status?.fi_funding_funded,
+          fi_funding_funding_person: fiFundingData?.fi_funding_status?.fi_funding_funding_person,
+          fi_funding_uih_funding_amount: fiFundingData?.fi_funding_status?.fi_funding_uih_funding_amount,
+          fi_funding_uih_funding_bu: fiFundingData?.fi_funding_status?.fi_funding_uih_funding_bu,
+          fi_funding_uih_funding_bu_aprroval: approvalfile,
+          fi_funding_customer_invoice: cifile
+        }
       }
 
     })
       .then(res => {
         console.log(res)
         setformSubmitBackdrop(false)
-        setTimeout(() => window.location.reload(), 1000);
+        setTimeout(() => {
+          window.location.href = '/search';
+          window.location.reload();
+          
+        }, 1000);
 
       })
-      .catch(err=>{
+      .catch(err => {
         console.log(err)
       })
 
@@ -209,7 +266,7 @@ export default function EditProjectMain(props) {
 
       >
 
-      
+
         <Backdrop
           sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={formSubmitBackdrop}
@@ -259,13 +316,13 @@ export default function EditProjectMain(props) {
       </div>
       <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={5} >
         <BottomNavigation style={{ marginBottom: "-4px", marginTop: "4px" }}>
-        {/* <Typography> {editData.project_title.title}</Typography> */}
+          {/* <Typography> {editData.project_title.title}</Typography> */}
 
-         
+
           <Fab variant="extended" color='info' onClick={validateFirst}>
             <PublishIcon sx={{ mr: 1 }} />
-            
-            
+
+
             Update
           </Fab>
 

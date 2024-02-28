@@ -4,6 +4,7 @@ const initialState = {
   projectDetails:{},
   customerDetails:{},
   documents:{},
+  prevDocuments:{},
   system:{},
   fiFunding:{},
   fiFundingDocuments:{},
@@ -27,13 +28,17 @@ export const editDataSlice = createSlice({
       if(action.payload?.documents)
       state.documents=action.payload.documents
 
+      
+      if(action.payload?.prevDocuments)
+      state.prevDocuments=action.payload.prevDocuments
+
       if(action.payload?.system)
       state.system=action.payload.system
 
       if(action.payload?.fiFunding)
       state.fiFunding=action.payload.fiFunding
 
-      
+
       if(action.payload?.fiFundingDocuments)
       state.fiFundingDocuments=action.payload.fiFundingDocuments
 

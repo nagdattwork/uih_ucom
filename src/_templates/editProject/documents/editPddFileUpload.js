@@ -13,6 +13,8 @@ import VisibilityOffTwoToneIcon from '@mui/icons-material/VisibilityOffTwoTone';
 import { useDispatch, useSelector } from 'react-redux';
 import { append } from '../../features/projectData/projectData';
 import { appendEdits } from '../../features/projectData/editData';
+import Download from '@mui/icons-material/Download';
+import backend from '../../../app/baseLink';
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
     clipPath: 'inset(50%)',
@@ -25,11 +27,14 @@ const VisuallyHiddenInput = styled('input')({
     width: 1,
 });
 
-const EditCIFileUpload = () => {
+const EditPDDFileUpload = () => {
     const data=useSelector(state=>state.editData)
-    const docs=data.fiFundingDocuments
-    
-    const [files, setFiles] = useState(docs?.fi_funding_customer_invoice?[...docs?.fi_funding_customer_invoice]:[]);
+    const docs=(data.documents)
+    const prevData=data.prevDocuments
+    let temp=(prevData?.pdd_document?.split(","))
+    temp=temp?.filter((file)=>{return file!=""} )
+    const [prevPdd,setPrevPdd]=useState(temp?temp:[])
+    const [files, setFiles] = useState(docs?.pdd_document?[...docs?.pdd_document]:[]);
     const [loading, setLoading] = useState(false);
     const[visible,setVisible]=useState(false)
     const [uploadedFiles,setUploadedFiles]=useState([])
@@ -37,20 +42,32 @@ const EditCIFileUpload = () => {
    
     useEffect(()=>{
         
-        let documentsData=docs
+        let documentsData=data.documents
         documentsData={
             ...documentsData,
            ... {
-            fi_funding_customer_invoice:uploadedFiles.map((data) => {return (data) })
+                pdd_document:uploadedFiles.map((data) => {return (data) })
             }
         }
+        let preDocumentsData=data.prevDocuments
+        preDocumentsData={
+            ...preDocumentsData,...{
+                pdd_document:prevPdd.toString()
+            }
+        }
+
         
         dispatch(appendEdits({
-            fiFundingDocuments:documentsData
+            documents:documentsData,
+        }))
+
+        dispatch(appendEdits({
+            prevDocuments:preDocumentsData
+
         }))
 
 
-    },[uploadedFiles])
+    },[uploadedFiles,prevPdd])
     useEffect(() => {
        const t=
        files.filter((ele)=>{
@@ -134,13 +151,35 @@ const EditCIFileUpload = () => {
         })
         setFiles(tem)
     }
+    const downloadFiles=(url)=>{
+        url=process.env.REACT_APP_DOCUMENT_PATH+url;
+        window.open(url,"_blank")
+    }
+    const handleDeletePrevFiles =async (filename,indexT) => {
+        
 
+        if (!filename) alert("file not uploaded")
+        try {
+            await backend.delete(`test/delete/${encodeURIComponent(filename)}`);
+            // oldApprovalFiles(newArr);
+
+        } catch (error) {
+            console.error(error);
+        }
+        setPrevPdd((prevItems) => prevItems.filter((_, index) => index !== indexT));          
+
+
+    }
+
+    
     return (
         <div>
             {/* <input type="file" multiple onChange={handleFileChange} /> */}
            
             <Grid container spacing={2} >
-               
+                <Grid item xs={10}>
+                    <OutlinedInput size='small' placeholder='Details' fullWidth/>
+                </Grid>
                 <Grid item>
 
 
@@ -171,7 +210,30 @@ const EditCIFileUpload = () => {
             </Grid>
            <Grid container spacing={2} style={{marginTop:"5px"}}>
           <Grid item xs={12}>
-          <Collapse in={visible} component={Paper}>
+          <Collapse in={visible} component={Paper} >
+            <Typography>
+                Previous Files
+            </Typography>
+            <List> {
+                           
+                            prevPdd.map((file,index)=>{
+                             return ( 
+                                 <ListItem>
+                                    <ListItemText primary={file}/>
+                                 <ListItemSecondaryAction>
+                                 <IconButton color='info' onClick={()=>{downloadFiles(file)}}>
+                                        <Download />
+                                    </IconButton>
+                                    <IconButton color='error' onClick={()=>{handleDeletePrevFiles(file,index)}}>
+                                        <DeleteIcon/>
+                                    </IconButton>
+                                    </ListItemSecondaryAction>
+                                 </ListItem>
+                              )
+                            })
+                            
+                           } </List>
+            <Typography>Current Files</Typography>
            <List>
                 {files.map((file, index) => (
                     <ListItem key={index}>
@@ -197,4 +259,4 @@ const EditCIFileUpload = () => {
     );
 };
 
-export default EditCIFileUpload;
+export default EditPDDFileUpload;

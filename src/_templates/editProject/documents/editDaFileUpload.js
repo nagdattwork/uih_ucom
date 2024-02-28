@@ -13,6 +13,8 @@ import VisibilityOffTwoToneIcon from '@mui/icons-material/VisibilityOffTwoTone';
 import { useDispatch, useSelector } from 'react-redux';
 import { append } from '../../features/projectData/projectData';
 import { appendEdits } from '../../features/projectData/editData';
+import { Download } from '@mui/icons-material';
+import backend from '../../../app/baseLink';
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
     clipPath: 'inset(50%)',
@@ -25,32 +27,43 @@ const VisuallyHiddenInput = styled('input')({
     width: 1,
 });
 
-const EditCIFileUpload = () => {
+const EditDAFileUpload = () => {
     const data=useSelector(state=>state.editData)
-    const docs=data.fiFundingDocuments
-    
-    const [files, setFiles] = useState(docs?.fi_funding_customer_invoice?[...docs?.fi_funding_customer_invoice]:[]);
+    const docs=(data.documents)
+    const [files, setFiles] = useState(docs?.draft_agreement?[...docs?.draft_agreement]:[]);
     const [loading, setLoading] = useState(false);
     const[visible,setVisible]=useState(false)
     const [uploadedFiles,setUploadedFiles]=useState([])
+    const prevData=data.prevDocuments
+
+    let temp=(prevData?.draft_agreement?.split(","))
+    temp=temp?.filter((file)=>{return file!=""} )
+    const [prevDA,setPrevDA]=useState(temp?temp:[])
     const dispatch=useDispatch()
    
     useEffect(()=>{
         
-        let documentsData=docs
+        let documentsData=data.documents
         documentsData={
             ...documentsData,
            ... {
-            fi_funding_customer_invoice:uploadedFiles.map((data) => {return (data) })
+            draft_agreement:uploadedFiles.map((data) => {console.log(data); return (data) })
+            }
+        }
+        let preDocumentsData=data.prevDocuments
+        preDocumentsData={
+            ...preDocumentsData,...{
+                draft_agreement:prevDA.toString()
             }
         }
         
         dispatch(appendEdits({
-            fiFundingDocuments:documentsData
+            documents:documentsData,
+            prevDocuments:preDocumentsData
         }))
 
 
-    },[uploadedFiles])
+    },[uploadedFiles,prevDA])
     useEffect(() => {
        const t=
        files.filter((ele)=>{
@@ -134,13 +147,33 @@ const EditCIFileUpload = () => {
         })
         setFiles(tem)
     }
+    const downloadFiles=(url)=>{
+        url=process.env.REACT_APP_DOCUMENT_PATH+url;
+        window.open(url,"_blank")
+    }
+    const handleDeletePrevFiles = async (filename,indexT) => {
+        if (!filename) alert("file not uploaded")
+        try {
+            await backend.delete(`test/delete/${encodeURIComponent(filename)}`);
+            // oldApprovalFiles(newArr);
 
+        } catch (error) {
+            console.error(error);
+        }
+        setPrevDA((prevItems) => prevItems.filter((_, index) => index !== indexT));          
+
+    }
     return (
         <div>
             {/* <input type="file" multiple onChange={handleFileChange} /> */}
            
             <Grid container spacing={2} >
-               
+                <Grid item xs={5}>
+                    <OutlinedInput size='small' placeholder='Agreement Type' fullWidth/>
+                </Grid>
+                <Grid item xs={5}>
+                    <OutlinedInput size='small' placeholder='Document Owner' fullWidth/>
+                </Grid>
                 <Grid item>
 
 
@@ -172,6 +205,29 @@ const EditCIFileUpload = () => {
            <Grid container spacing={2} style={{marginTop:"5px"}}>
           <Grid item xs={12}>
           <Collapse in={visible} component={Paper}>
+          <Typography>
+                Previous Files
+            </Typography>
+            <List> {
+                           
+                            prevDA.map((file,index)=>{
+                             return ( 
+                                 <ListItem>
+                                    <ListItemText primary={file}/>
+                                 <ListItemSecondaryAction>
+                                 <IconButton color='info' onClick={()=>{downloadFiles(file)}}>
+                                        <Download />
+                                    </IconButton>
+                                    <IconButton color='error' onClick={()=>{handleDeletePrevFiles(file,index)}}>
+                                        <DeleteIcon/>
+                                    </IconButton>
+                                    </ListItemSecondaryAction>
+                                 </ListItem>
+                              )
+                            })
+                            
+                           } </List>
+            <Typography>Current Files</Typography>
            <List>
                 {files.map((file, index) => (
                     <ListItem key={index}>
@@ -197,4 +253,4 @@ const EditCIFileUpload = () => {
     );
 };
 
-export default EditCIFileUpload;
+export default EditDAFileUpload;

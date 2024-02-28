@@ -12,7 +12,6 @@ export default function SearchPage() {
 
   React.useEffect(() => {
     backend.post("api/projects/getmyprojects",{id:currentUser.user._id}).then((res)=>{
-      console.log(res.data.response)
       setRows(res.data.response)
     })
   }, [])

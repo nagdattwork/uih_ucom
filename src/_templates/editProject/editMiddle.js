@@ -8,7 +8,6 @@ export default function EditMiddle() {
 
     const dispatch=useDispatch()
     const locationData=useLocation()
-    console.log(locationData.state.data)
     const [editData,setEditData]=React.useState(locationData.state.data)
     const [temp,setTemp]=useState(0)
     React.useEffect(()=>{
@@ -27,6 +26,7 @@ export default function EditMiddle() {
           system:editData.system,
           projectId:editData._id,
           fiFunding:editData.fi_funding,
+          prevDocuments:editData.documents,
           
          
         }))
