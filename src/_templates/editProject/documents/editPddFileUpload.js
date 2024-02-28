@@ -32,7 +32,7 @@ const EditPDDFileUpload = () => {
     const docs=(data.documents)
     const prevData=data.prevDocuments
     let temp=(prevData?.pdd_document?.split(","))
-    temp=temp?.filter((file)=>{return file!=""} )
+    temp=temp?.filter((file)=>{return file!="" && file!=undefined && file !='undefined'} )
     const [prevPdd,setPrevPdd]=useState(temp?temp:[])
     const [files, setFiles] = useState(docs?.pdd_document?[...docs?.pdd_document]:[]);
     const [loading, setLoading] = useState(false);

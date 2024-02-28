@@ -37,7 +37,7 @@ const EditSAFileUpload = () => {
     const prevData = data.prevDocuments
 
     let temp = (prevData?.signed_agreement?.split(","))
-    temp = temp?.filter((file) => { return file != "" })
+    temp = temp?.filter((file) => { return (file != "" && file!=undefined && file !='undefined') })
     const [prevSA, setPrevSA] = useState(temp ? temp : [])
     const dispatch = useDispatch()
 

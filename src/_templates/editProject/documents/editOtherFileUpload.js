@@ -37,7 +37,7 @@ const EditOtherFileUpload = () => {
     const prevData = data.prevDocuments
 
     let temp = (prevData?.others?.split(","))
-    temp = temp?.filter((file) => { return file != "" })
+    temp = temp?.filter((file) => { return file != "" && file!=undefined && file !='undefined' })
     const [prevOthers, setPrevOthers] = useState(temp ? temp : [])
     const dispatch = useDispatch()
 

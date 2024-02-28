@@ -37,7 +37,7 @@ const EditDAFileUpload = () => {
     const prevData=data.prevDocuments
 
     let temp=(prevData?.draft_agreement?.split(","))
-    temp=temp?.filter((file)=>{return file!=""} )
+    temp=temp?.filter((file)=>{return file!="" && file!=undefined && file !='undefined'} )
     const [prevDA,setPrevDA]=useState(temp?temp:[])
     const dispatch=useDispatch()
    
