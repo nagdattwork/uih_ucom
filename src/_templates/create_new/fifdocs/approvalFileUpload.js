@@ -12,6 +12,7 @@ import CloudUploadTwoToneIcon from '@mui/icons-material/CloudUploadTwoTone';
 import VisibilityOffTwoToneIcon from '@mui/icons-material/VisibilityOffTwoTone';
 import { useDispatch, useSelector } from 'react-redux';
 import { append } from '../../features/projectData/projectData';
+import backend from '../../../app/baseLink';
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
     clipPath: 'inset(50%)',
@@ -91,7 +92,7 @@ const AprovalFileUpload = () => {
 
 
         try {
-            const response = await axios.post(process.env.REACT_APP_LINK+'api/projects/document/upload/', formData, {
+            const response = await backend.post('api/projects/document/upload/', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -117,7 +118,7 @@ const AprovalFileUpload = () => {
     const handleDelete = async (filename, file) => {
         if (!filename) alert("file not uploaded")
         try {
-            await axios.delete(`${process.env.REACT_APP_LINK}test/delete/${encodeURIComponent(filename)}`);
+            await backend.delete(`test/delete/${encodeURIComponent(filename)}`);
             delete file.uploaded_path
 
             const afterDelete = [...files]

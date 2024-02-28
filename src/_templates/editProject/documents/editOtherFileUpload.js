@@ -103,7 +103,7 @@ const EditOtherFileUpload = () => {
 
 
         try {
-            const response = await axios.post(process.env.REACT_APP_LINK + 'api/projects/document/upload/', formData, {
+            const response = await backend.post( 'api/projects/document/upload/', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -129,7 +129,7 @@ const EditOtherFileUpload = () => {
     const handleDelete = async (filename, file) => {
         if (!filename) alert("file not uploaded")
         try {
-            await axios.delete(`${process.env.REACT_APP_LINK}test/delete/${encodeURIComponent(filename)}`);
+            await backend.delete(`test/delete/${encodeURIComponent(filename)}`);
             delete file.uploaded_path
 
             const afterDelete = [...files]
