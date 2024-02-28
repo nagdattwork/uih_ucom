@@ -35,8 +35,8 @@ const defaultTheme = createTheme();
 export default function Login(props) {
   const dispatch = useDispatch()
 
-  const  [email,setEmail]=React.useState('nagdatt@gmail.com')
-  const [pass,setPass]=React.useState('pass')
+  const  [email,setEmail]=React.useState('')
+  const [pass,setPass]=React.useState('')
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);

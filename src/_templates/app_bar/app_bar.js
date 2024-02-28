@@ -27,7 +27,7 @@ const navItems =[
   { title: 'Search & Edit', link: 'search',state:{caller:"search",data:null} },
   { title: 'Dashboard', link: 'dashboard',state:{caller:"dashboard",data:null} },
   { title: 'Templates- L&C', link: 'templates',state:{caller:"templates",data:null} },
-  { title: 'Tester - FILE ', link: 'filepush',state:{caller:"tester",data:null} }
+  // { title: 'Tester - FILE ', link: 'filepush',state:{caller:"tester",data:null} }
 
 ]
 const theme = createTheme({
