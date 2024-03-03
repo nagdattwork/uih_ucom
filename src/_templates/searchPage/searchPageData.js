@@ -142,28 +142,7 @@ const columns = [
   { field: 'project_title.current_stage', headerName: 'Status',valueGetter: (params) => params.row.project_title.current_stage,flex:0.5,  cellClassName: 'wrap-cell-content'},
   { field: 'fi_funding?.fi_funding_status', headerName: 'Funded?',valueGetter: (params) => params.row.fi_funding?.fi_funding_status?.fi_funding_funded==true?"YES":"NO",flex:0.5, },
 
-  // {
-  //   field: 'actions',
-  //   headerName: 'Actions',
-  //   renderCell: (params) =>{
-  //     return(
-  //     <div>
-       
-  //       <div align="left">
-  //               <Link to='/editproject' state={
-  //               { data: params.row}
-  //               }>
-  //               <IconButton>
-  //               <ModeEditTwoToneIcon color='success'/>
-  //               </IconButton>
-  //               </Link>
-  //               <IconButton>
-  //                   <DeleteTwoToneIcon color='error'/>
-  //               </IconButton>
-  //             </div>
-  //     </div>
-  //   )},
-  // },
+
 ];
 
 if(currentUser.user.userType!=='basic'){
@@ -173,11 +152,11 @@ if(currentUser.user.userType!=='basic'){
       <div>
         <Grid container spacing={1}>
           <Grid item xs={'auto'}>
-          <Avatar sx={{ width: 24, height: 24 }} src= { process.env.REACT_APP_DOCUMENT_PATH+ params.row.owner.image}/>  
+          <Avatar sx={{ width: 24, height: 24 }} src= { process.env.REACT_APP_DOCUMENT_PATH+ params.row?.owner?.image}/>  
 
           </Grid>
           <Grid item xs='auto'>
-          <b>{params.row.owner?.fname }</b>
+          <b>{params.row?.owner?.fname }</b>
           </Grid>
         </Grid>
       </div>

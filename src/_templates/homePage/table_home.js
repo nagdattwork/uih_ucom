@@ -134,11 +134,11 @@ function CustomDataGrid(props) {
         <div>
           <Grid container spacing={1}>
             <Grid item xs={'auto'}>
-            <Avatar sx={{ width: 24, height: 24 }} src= { process.env.REACT_APP_DOCUMENT_PATH+ params.row.owner.image}/>  
+            <Avatar sx={{ width: 24, height: 24 }} src= { process.env.REACT_APP_DOCUMENT_PATH+ params.row?.owner?.image}/>  
   
             </Grid>
             <Grid item xs='auto'>
-            <b>{params.row.owner?.fname }</b>
+            <b>{params.row?.owner?.fname }</b>
             </Grid>
           </Grid>
         </div>
