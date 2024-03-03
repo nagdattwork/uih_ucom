@@ -206,9 +206,9 @@ const EditSAFileUpload = () => {
             <Grid container spacing={2} style={{ marginTop: "5px" }}>
                 <Grid item xs={12}>
                     <Collapse in={visible} component={Paper}>
-                        <Typography>
-                            Previous Files
-                        </Typography>
+                    <Typography style={{marginLeft:"10px"}}>
+                <b >Previous Files</b>
+            </Typography>
                         <List> {
 
                             prevSA.map((file, index) => {
@@ -228,7 +228,9 @@ const EditSAFileUpload = () => {
                             })
 
                         } </List>
-                        <Typography>Current Files</Typography>
+                        <Typography style={{marginLeft:"10px"}}>
+                <b >Current Files</b>
+            </Typography>
                         <List>
                             {files.map((file, index) => (
                                 <ListItem key={index}>

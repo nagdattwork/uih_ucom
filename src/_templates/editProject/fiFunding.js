@@ -1,4 +1,4 @@
-import { Autocomplete, Button, Collapse, Grid, IconButton, List, ListItem, ListItemSecondaryAction, ListItemText, OutlinedInput, Paper, TextField, Typography, backdropClasses } from '@mui/material'
+import { Alert, Autocomplete, Button, Collapse, Grid, IconButton, List, ListItem, ListItemSecondaryAction, ListItemText, OutlinedInput, Paper, Stack, TextField, Typography, backdropClasses } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import Switch from '@mui/material/Switch';
 import { useDispatch, useSelector } from 'react-redux';
@@ -21,18 +21,18 @@ export default function FiFunding() {
     const [bu, setBU] = useState(fundingDataT?.fi_funding_status?.fi_funding_uih_funding_bu ? fundingDataT?.fi_funding_status?.fi_funding_uih_funding_bu : "")
 
 
-    let temp=(fundingDataT?.fi_funding_status?.fi_funding_uih_funding_bu_aprroval?.split(","))
-    temp=temp?.filter((file)=>{return file!="" && file!="undefined" } )
+    let temp = (fundingDataT?.fi_funding_status?.fi_funding_uih_funding_bu_aprroval?.split(","))
+    temp = temp?.filter((file) => { return file != "" && file != "undefined" })
 
 
 
-    const [oldApprovalFiles, setOldApprovalFiles] = useState(temp?temp:[])
+    const [oldApprovalFiles, setOldApprovalFiles] = useState(temp ? temp : [])
 
 
-    let temp2=(fundingDataT?.fi_funding_status?.fi_funding_customer_invoice?.split(","))
-    temp2=temp2?.filter((file)=>{return file!="" && file!="undefined"} )
+    let temp2 = (fundingDataT?.fi_funding_status?.fi_funding_customer_invoice?.split(","))
+    temp2 = temp2?.filter((file) => { return file != "" && file != "undefined" })
 
-    const [oldCustomerInvoices, setOldCustomerInvoices] = useState(temp2?temp2:[])
+    const [oldCustomerInvoices, setOldCustomerInvoices] = useState(temp2 ? temp2 : [])
     useEffect(() => {
 
         let fundingData = projectData.fiFunding
@@ -53,22 +53,23 @@ export default function FiFunding() {
         dispatch(appendEdits({
             fiFunding: fundingData,
         }))
-    }, [isFunded, whoFunded, bu, amount,oldApprovalFiles,oldCustomerInvoices])
+    }, [isFunded, whoFunded, bu, amount, oldApprovalFiles, oldCustomerInvoices])
 
-    const downloadFiles=(url)=>{
-        url=process.env.REACT_APP_DOCUMENT_PATH+url;
-        window.open(url,"_blank")
+    const downloadFiles = (url) => {
+        url = process.env.REACT_APP_DOCUMENT_PATH + url;
+        window.open(url, "_blank")
     }
     const handleDeleteApprovalFile = async (filename, indexToDelete) => {
         if (!filename) alert("file not uploaded")
         try {
             await backend.delete(`test/delete/${encodeURIComponent(filename)}`);
-            setOldApprovalFiles((prevItems) => prevItems.filter((_, index) => index !== indexToDelete));          
             // oldApprovalFiles(newArr);
 
         } catch (error) {
             console.error(error);
         }
+        setOldApprovalFiles((prevItems) => prevItems.filter((_, index) => index !== indexToDelete));
+
 
     };
 
@@ -76,11 +77,12 @@ export default function FiFunding() {
         if (!filename) alert("file not uploaded")
         try {
             await backend.delete(`test/delete/${encodeURIComponent(filename)}`);
-            setOldCustomerInvoices((prevItems) => prevItems.filter((_, index) => index !== indexToDelete));          
             // oldApprovalFiles(newArr);
 
         } catch (error) {
             console.error(error);
+            setOldCustomerInvoices((prevItems) => prevItems.filter((_, index) => index !== indexToDelete));
+
         }
 
     };
@@ -144,8 +146,7 @@ export default function FiFunding() {
                                 <Typography variant='subtitle1' ml={2} component="h2" style={{ fontWeight: "bold" }}>Customer Invoice</Typography>
 
                             </Grid>
-                            <Grid item xs={2}>
-                                {/* <AprovalFileUpload /> */}
+                            <Grid item xs={4}>
                                 <EditCIFileUpload />
                             </Grid>
                         </Grid>
@@ -156,57 +157,55 @@ export default function FiFunding() {
 
                 </List>
             </Collapse>
-            <Grid container>
+            <Grid container spacing={2}>
 
                 <Grid item xs={6}>
                     <h4>Previously Uploaded Approval Files</h4>
-                    <List>
-                        {
-                            oldApprovalFiles.map((data, index) => {
+                            {oldApprovalFiles.map((data, index) => (
+                                <ListItem key={index}  >
 
-                                return (
-                                    <ListItem key={index}>
-                                        <ListItemText primary={data} />
-                                        <ListItemSecondaryAction>
-                                        <IconButton color='info' onClick={()=>{downloadFiles(data)}}>
-                                                <DownloadIcon  />
-                                            </IconButton>
-
-                                            <IconButton color='error' onClick={(()=>handleDeleteApprovalFile(data,index))}>
-                                                <DeleteIcon  />
-                                            </IconButton>
-                                        </ListItemSecondaryAction>
-                                    </ListItem>
-                                )
-
-                            })
-                        }
-                    </List>
+                                    <Stack sx={{ width: '100%' }} direction={'row'} >
+                                        <Alert icon={false} severity='info'
+                                            sx={{ width: '100%' }}
+                                            action={
+                                                <>
+                                                    <IconButton color='info' onClick={() => { downloadFiles(data) }}>
+                                                        <DownloadIcon />
+                                                    </IconButton>
+                                                    <IconButton color='error' onClick={() => handleDeleteApprovalFile(data, index)}>
+                                                        <DeleteIcon />
+                                                    </IconButton>
+                                                </>
+                                            }>
+                                            {data}
+                                        </Alert>
+                                    </Stack>
+                                </ListItem>
+                            ))}
                 </Grid>
                 <Grid item xs={6}>
                     <h4>Previously Uploaded Customer Invoice Files Files</h4>
-                    <List>
-                        {
-                            oldCustomerInvoices.map((data, index) => {
+                    {oldCustomerInvoices.map((data, index) => (
+                                <ListItem key={index}  >
 
-                                return (
-                                    <ListItem key={index}>
-                                        <ListItemText primary={data} />
-                                        <ListItemSecondaryAction>
-                                            <IconButton color='info' onClick={()=>{downloadFiles(data)}}>
-                                                <DownloadIcon  />
-                                            </IconButton>
-
-                                            <IconButton color='error' onClick={(()=>handleDeleteCIFile(data,index))}>
-                                                <DeleteIcon />
-                                            </IconButton>
-                                        </ListItemSecondaryAction>
-                                    </ListItem>
-                                )
-
-                            })
-                        }
-                    </List>
+                                    <Stack sx={{ width: '100%' }} direction={'row'} >
+                                        <Alert icon={false} severity='info'
+                                            sx={{ width: '100%' }}
+                                            action={
+                                                <>
+                                                    <IconButton color='info' onClick={() => { downloadFiles(data) }}>
+                                                        <DownloadIcon />
+                                                    </IconButton>
+                                                    <IconButton color='error' onClick={() => handleDeleteCIFile(data, index)}>
+                                                        <DeleteIcon />
+                                                    </IconButton>
+                                                </>
+                                            }>
+                                            {data}
+                                        </Alert>
+                                    </Stack>
+                                </ListItem>
+                            ))}
                 </Grid>
 
 

@@ -52,14 +52,14 @@ export default function Account() {
    
     return (
         <div >
-            <Grid container spacing={2} padding={2}>
+            <Grid container spacing={2} padding={2} >
            <Grid item  >
            <h3>Accounts</h3>
            </Grid>
             </Grid>
             <Grid container component={Paper} spacing={2} >
                 <Grid item xs={12}>
-                    <List>
+                    <List style={{maxHeight:"650px",minHeight:"50px", overflow: 'auto',}}>
                         {
                             userList.map((data, index) => {
                                 if (data._id === user.user._id) return <></>

@@ -1,7 +1,7 @@
 // FileUpload.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Button, ButtonGroup, CircularProgress, Collapse, Grid, IconButton, List, ListItem, ListItemSecondaryAction, ListItemText, OutlinedInput, Paper, Typography } from '@mui/material';
+import { Alert, Button, ButtonGroup, CircularProgress, Collapse, Grid, IconButton, List, ListItem, ListItemSecondaryAction, ListItemText, OutlinedInput, Paper, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloudOffIcon from '@mui/icons-material/CloudOff';
 import styled from '@emotion/styled';
@@ -118,14 +118,15 @@ const EditAprovalFileUpload = () => {
         if (!filename) alert("file not uploaded")
         try {
             await backend.delete(`test/delete/${encodeURIComponent(filename)}`);
-            delete file.uploaded_path
+            
+        } catch (error) {
+            console.error(error);
+        }
+        delete file.uploaded_path
 
             const afterDelete = [...files]
             setFiles(afterDelete)
 
-        } catch (error) {
-            console.error(error);
-        }
 
     };
 
@@ -174,6 +175,7 @@ const EditAprovalFileUpload = () => {
           <Grid item xs={12}>
           <Collapse in={visible} component={Paper}>
             {data?.fiFunding?.fi_funding_uih_funding_bu_aprroval}
+          
            <List>
                 {files.map((file, index) => (
                     <ListItem key={index}>
@@ -192,7 +194,9 @@ const EditAprovalFileUpload = () => {
                         </ListItemSecondaryAction>
                     </ListItem>
                 ))}
-            </List></Collapse>
+            </List>
+
+            </Collapse>
           </Grid>
            </Grid>
         </div>

@@ -202,9 +202,9 @@ const EditOtherFileUpload = () => {
             <Grid container spacing={2} style={{ marginTop: "5px" }}>
                 <Grid item xs={12}>
                     <Collapse in={visible} component={Paper}>
-                        <Typography>
-                            Previous Files
-                        </Typography>
+                    <Typography style={{marginLeft:"10px"}}>
+                <b >Previous Files</b>
+            </Typography>
                         <List> {
 
                             prevOthers.map((file, index) => {
@@ -224,7 +224,9 @@ const EditOtherFileUpload = () => {
                             })
 
                         } </List>
-                        <Typography>Current Files</Typography>
+                       <Typography style={{marginLeft:"10px"}}>
+                <b >Current Files</b>
+            </Typography>
 
                         <List>
                             {files.map((file, index) => (
