@@ -1,4 +1,5 @@
-import { Grid, List, ListItem, ListItemButton } from '@mui/material'
+import { Download } from '@mui/icons-material'
+import { Divider, Grid, IconButton, List, ListItem, ListItemButton, ListItemSecondaryAction, Paper } from '@mui/material'
 import React, { useState } from 'react'
 
 export default function TemplateLC() {
@@ -7,30 +8,53 @@ export default function TemplateLC() {
 
     return (
     <div style={{margin:"10px"}}>
-        <Grid container spacing={2}>
-            <Grid item  xs={6}>
+        <Grid container spacing={2} >
+            <Grid item  xs={6} component={Paper}>
 
             
-                <h1 style={{backgroundColor:'green',padding:"2px",color:"white",alignContent:"center", textAlign: 'center'}}>
+                <h1 style={{backgroundColor:'#3f51b5',padding:"2px",color:"white", textAlign: 'center'}}>
                     Leagal Templates- Global
-                </h1>
+                                    </h1>
                 <List>
                     {
                         leagalTemp.map((row)=>{
-                            return <ListItemButton> {row} </ListItemButton>
+                            return (
+                                <>
+                                <ListItem> {row}
+                            
+                            <ListItemSecondaryAction>
+                                <IconButton color='info'>
+                                    <Download/>
+                                </IconButton>
+                            </ListItemSecondaryAction>
+                             </ListItem>
+                             <Divider/>
+                                </>
+                            )
                         })
                     }
                 </List>
             </Grid>
 
-            <Grid item  xs={6}>
-            <h1 style={{backgroundColor:'green',padding:"2px",color:"white",alignContent:"center", textAlign: 'center'}}>
+            <Grid item  xs={6} component={Paper}>
+            <h1 style={{backgroundColor:'#3f51b5',padding:"2px",color:"white",alignContent:"center", textAlign: 'center'}}>
                    Compliance-Templates
                 </h1>
                 <List>
                     {
                         complianceTemp.map((row)=>{
-                            return <ListItemButton> {row} </ListItemButton>
+                            return (
+                                <>
+                                <ListItem> {row} 
+                            <ListItemSecondaryAction>
+                                <IconButton color='info'>
+                                    <Download/>
+                                </IconButton>
+                            </ListItemSecondaryAction>
+                            </ListItem>
+                            <Divider/>
+                                </>
+                            )
                         })
                     }
                 </List>

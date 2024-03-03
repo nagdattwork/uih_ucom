@@ -13,10 +13,11 @@ import backend from '../../app/baseLink';
 import { useSelector } from 'react-redux';
 import { alpha } from '@mui/material/styles';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
-import { IconButton } from '@mui/material';
+import { Avatar, Grid, IconButton } from '@mui/material';
 import ModeEditTwoToneIcon from '@mui/icons-material/ModeEditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import tableCSS from './table.css'
+import { useNavigate } from 'react-router';
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#7986cb',
@@ -45,9 +46,10 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 export default function TableHome() {
   const [rows,setRows]=React.useState([])
-  const currentUser=useSelector((state)=>state.login)
+    const currentUser=useSelector(state=>state.login)
+
   React.useEffect(()=>{
-    backend.post("api/projects/getmyprojects",{id:currentUser.user._id}).then((res)=>{
+    backend.post("api/projects/getmyprojects",{id:currentUser.user._id,type:currentUser.user.userType}).then((res)=>{
       console.log(res.data.response)
       setRows(res.data.response)
     })
@@ -65,35 +67,6 @@ export default function TableHome() {
 
 
 
-const columns = [
-  { field: '_id', headerName: 'ID' },
-  { field: 'project_title.title', headerName: 'Title',valueGetter: (params) => params.row.project_title.title,width:180 },
-  { field: 'project_title.objective', headerName: 'Objective',valueGetter: (params) => params.row.project_title.objective,width:160,  cellClassName: 'wrap-cell-content'},
-  { field: 'customer_details.institutes', headerName: 'Institutes',valueGetter: (params) => [...params.row.customer_details.institutes.map((data)=>data.institute_name)].toString(),width:150,  cellClassName: 'wrap-cell-content'},
-  { field: 'project_title.project_duration', headerName: 'Duration',valueGetter: (params) => params.row.project_title.project_duration,width:90,  cellClassName: 'wrap-cell-content'},
-  { field: 'project_title.act_start_date', headerName: 'Start Date',valueGetter: (params) => params.row.project_title.act_start_date,width:110,  cellClassName: 'wrap-cell-content'},
-  { field: 'project_title.current_stage', headerName: 'Status',valueGetter: (params) => params.row.project_title.current_stage,width:100,  cellClassName: 'wrap-cell-content'},
-  { field: 'fi_funding?.fi_funding_status', headerName: 'Funded?',valueGetter: (params) => params.row.fi_funding?.fi_funding_status?.fi_funding_funded==true?"YES":"NO",width:100,  cellClassName: 'wrap-cell-content'},
-
-  // {
-  //   field: 'actions',
-  //   headerName: 'Actions',
-  //   renderCell: (params) => (
-  //     <div>
-       
-  //       <div align="left">
-  //               <IconButton>
-  //               <ModeEditTwoToneIcon color='success'/>
-  //               </IconButton>
-  //               <IconButton>
-  //                   <DeleteTwoToneIcon color='error'/>
-  //               </IconButton>
-  //             </div>
-  //     </div>
-  //   ),
-  // },
-];
-
 
 const ODD_OPACITY = 0.2;
 const StripedDataGrid = styled(DataGrid)(({ theme }) => ({
@@ -101,8 +74,10 @@ const StripedDataGrid = styled(DataGrid)(({ theme }) => ({
     backgroundColor: theme.palette.grey[200],
     '&:hover, &.Mui-hovered': {
       backgroundColor: alpha(theme.palette.primary.main, ODD_OPACITY),
+      cursor:"pointer",
       '@media (hover: none)': {
         backgroundColor: 'transparent',
+
       },
     },
     '&.Mui-selected': {
@@ -126,13 +101,66 @@ const StripedDataGrid = styled(DataGrid)(({ theme }) => ({
         },
       },
     },
+    '& .MuiDataGrid-row':{
+      cursor:"pointer",
+    },
   },
+ [ `& .${gridClasses.row}.odd`]:{
+  '&:hover, &.Mui-hovered': {
+    cursor:"pointer"
+  }
+
+ }
 }));
 function CustomDataGrid(props) {
+
+  const currentUser=useSelector(state=>state.login)
+
+  const columns = [
+    // { field: '_id', headerName: 'ID',flex:1,clickable:true },
+    { field: 'project_title.title', headerName: 'Title',valueGetter: (params) => params.row.project_title.title,flex:1 },
+    { field: 'project_title.objective', headerName: 'Objective',valueGetter: (params) => params.row.project_title.objective,flex:1,  cellClassName: 'wrap-cell-content'},
+    { field: 'customer_details.institutes', headerName: 'Institutes',valueGetter: (params) => [...params.row.customer_details.institutes.map((data)=>data.institute_name)].toString(),flex:1,  },
+    { field: 'project_title.project_duration', headerName: 'Duration',valueGetter: (params) => params.row.project_title.project_duration,flex:0.5,  cellClassName: 'wrap-cell-content'},
+    { field: 'project_title.act_start_date', headerName: 'Start Date',valueGetter: (params) => params.row.project_title.act_start_date,flex:0.5,  cellClassName: 'wrap-cell-content'},
+    { field: 'project_title.current_stage', headerName: 'Status',valueGetter: (params) => params.row.project_title.current_stage,flex:0.5,  cellClassName: 'wrap-cell-content'},
+   
+  ];
+  
+  if(currentUser.user.userType!=='basic'){
+    columns.push(
+    { field: 'owner',flex:0.5, headerName: 'Owner',renderCell: (params) =>{
+      return(
+        <div>
+          <Grid container spacing={1}>
+            <Grid item xs={'auto'}>
+            <Avatar sx={{ width: 24, height: 24 }} src= { process.env.REACT_APP_DOCUMENT_PATH+ params.row.owner.image}/>  
+  
+            </Grid>
+            <Grid item xs='auto'>
+            <b>{params.row.owner?.fname }</b>
+            </Grid>
+          </Grid>
+        </div>
+      )
+    },flex:1,resizable:true }
+  
+    )
+  }
+
 //   const classes = useStyles();
+const history=useNavigate()
+const handleRowClick = (params) => {
+  history('/editproject',{
+    state:{
+      data:params.row
+    }
+  })
+};
+
 
   return (
-    <div style={{ maxHeight: 550, width: '100%',marginTop:"20px" }}>
+    <div style={{ height: 550, width: '100%',marginTop:"20px" }}>
       <StripedDataGrid
         rows={props.rows}
         columns={columns}
@@ -145,6 +173,7 @@ function CustomDataGrid(props) {
         }
         headerClassName="header-style"
         pageSizeOptions={[8,16,24]}
+        onRowClick={handleRowClick}
       />
     </div>
   );

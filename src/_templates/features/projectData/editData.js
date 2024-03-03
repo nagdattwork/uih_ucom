@@ -48,13 +48,32 @@ export const editDataSlice = createSlice({
 
     
     },
+    emptyEdits:(state,action)=>{
+      state.projectDetails={}
+      state.customerDetails={}
 
+      state.documents={}
+
+      
+      state.prevDocuments={}
+
+      state.system={}
+
+      state.fiFunding={}
+
+
+      state.fiFundingDocuments={}
+
+      state.projectId=""
+
+
+    }
  
    
    
   },
 })
 
-export const { appendEdits } = editDataSlice.actions
+export const { appendEdits ,emptyEdits} = editDataSlice.actions
 
 export default editDataSlice.reducer

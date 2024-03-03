@@ -16,20 +16,13 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import BasicMenu from './menu';
 import { green } from '@mui/material/colors';
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, Link, useLocation } from "react-router-dom";
 import { createTheme, makeStyles } from '@mui/material';
 import { ThemeProvider } from '@emotion/react';
+import { useSelector } from 'react-redux';
 
 const drawerWidth = 240;
-const navItems =[
-  { title: 'Home', link: '/',state:{caller:"home",data:null} },
-  { title: 'Create New', link: '/createnew',state:{caller:"create_new",data:null} },
-  { title: 'Search & Edit', link: 'search',state:{caller:"search",data:null} },
-  { title: 'Dashboard', link: 'dashboard',state:{caller:"dashboard",data:null} },
-  { title: 'Templates- L&C', link: 'templates',state:{caller:"templates",data:null} },
-  // { title: 'Tester - FILE ', link: 'filepush',state:{caller:"tester",data:null} }
 
-]
 const theme = createTheme({
   palette: {
     
@@ -45,21 +38,46 @@ const theme = createTheme({
   },
 });
 function AppBarMain(props) {
+  const [navItems,setNavItems]=React.useState([
+    { title: 'Home', link: '/',state:{caller:"home",data:null} },
+    { title: 'Create New', link: '/createnew',state:{caller:"create_new",data:null} },
+    { title: 'Search & Edit', link: 'search',state:{caller:"search",data:null} },
+    { title: 'Dashboard', link: 'dashboard',state:{caller:"dashboard",data:null} },
+    { title: 'Templates- L&C', link: 'templates',state:{caller:"templates",data:null} },
+    {
+      title: "Requests",
+      link: "accounts",
+      state: { caller: "accounts", data: null }
+  }
+    // { title: 'Tester - FILE ', link: 'filepush',state:{caller:"tester",data:null} }
+  
+  ])
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [selected,setSelected]=React.useState(0)
+  const [selected,setSelected]=React.useState(-1)
+  const user=useSelector(state=>state.login)
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
 
+ 
+  React.useEffect(()=>{
+    console.log(navItems)
+  },[navItems])
+
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
       <Typography variant="h6" sx={{ my: 2 }}>
-        MUI
+        uCOM
       </Typography>
       <Divider />
       <List>
-        {navItems.map((item,index) => (
+        {navItems.map((item,index) => {
+          
+          if(user.user.userType === 'basic' && item.link=='accounts'){
+            return <></>
+          }
+          return(
           <Link 
           to={item.link}
           state={item.state}
@@ -71,7 +89,7 @@ function AppBarMain(props) {
             </ListItemButton>
           </ListItem>
           </Link>
-        ))}
+        )})}
       </List>
     </Box>
   );
@@ -80,7 +98,43 @@ function AppBarMain(props) {
   const [selectedButton, setSelectedButton] = React.useState('Home');
   // const classes = useStyles();
   // Function to handle button click and update the selected button
+
+  const location = useLocation();
+  const [currentPath, setCurrentPath] = React.useState('');
+
+  React.useEffect(() => {
+    if(location.pathname==='/')
+    { 
+      setSelected(0)
+     }
+    if(location.pathname==='/createnew')
+   { 
+     setSelected(1)
+    }
+    if(location.pathname==='/search')
+    { 
+      setSelected(2)
+     }
+     if(location.pathname==='/dashboard')
+     { 
+       setSelected(3)
+      }
+      if(location.pathname==='/templates')
+      { 
+        setSelected(4)
+       }
+       if(location.pathname==='/accounts')
+      { 
+        setSelected(5)
+       }
+  }, [location.pathname]);
+
+
+  React.useEffect(()=>{
+    setNavItems([...navItems])
+  },[selectedButton])
   const handleButtonClick = (buttonName) => {
+    console.log(buttonName,location.pathname)
     setSelectedButton(buttonName);
   };
 
@@ -108,7 +162,12 @@ function AppBarMain(props) {
           <ThemeProvider theme={theme}>
 
           <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-            {navItems.map((item,index) => (
+            {navItems.map((item,index) => {
+              if(user.user.userType === 'basic' && item.link=='accounts'){
+                return <></>
+              }
+              
+              return(
                    <Link 
                    to={item.link}
                    state={item.state}
@@ -129,7 +188,7 @@ function AppBarMain(props) {
                 {item.title}
               </Button>
               </Link>
-            ))}
+            )})}
           </Box>
 </ThemeProvider>
          

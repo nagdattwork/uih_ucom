@@ -3,28 +3,53 @@ import React, { useEffect, useState } from 'react'
 import SearchPageData from './searchPageData'
 import ButtonGroup from '@mui/material/ButtonGroup';
 import backend from '../../app/baseLink';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation } from 'react-router';
+import { emptyEdits } from '../features/projectData/editData';
 export default function SearchPage() {
-
+  
   const [rows, setRows] = React.useState([])
-  const [tempRows, setTempRows] = React.useState([])
+  const [tempRows, setTempRows] = React.useState(rows)
   const currentUser=useSelector((state)=>state.login)
-
+  const dispatch=useDispatch()
   React.useEffect(() => {
-    backend.post("api/projects/getmyprojects",{id:currentUser.user._id}).then((res)=>{
+    dispatch(emptyEdits({}))
+    backend.post("api/projects/getmyprojects",{id:currentUser.user._id,type:currentUser.user.userType}).then((res)=>{
       setRows(res.data.response)
     })
   }, [])
 
+  React.useEffect(() => {
+   setTempRows(rows)
+  }, [rows])
 
+  const filt=(row)=>{
 
+    let tempObjective=row.project_title?.objective?.toLowerCase()
+    tempObjective=tempObjective?tempObjective:""
+    let tempInstitues=row.customer_details?.institutes?.map(inst=>inst.institute_name).toString()
+    tempInstitues=tempInstitues?tempInstitues:""
+    console.log(tempObjective,tempInstitues)
 
+    
+   return (row._id.toLowerCase().includes(id.toLowerCase()) && 
+   row.project_title?.title?.toLowerCase(). includes(title.toLowerCase()) &&
+   tempInstitues.toLowerCase().includes(institute.toLowerCase()) &&
+   tempObjective.includes(objective.toLowerCase()) 
+
+   
+   )
+  }
   //search by id
   const [id, setId] = useState("")
   const [title, setTitle] = useState("")
+  const [objective,setObjective]=useState("")
+  const [institute,setInstitute]=useState("")
+
   useEffect(() => {
-    setTempRows(rows?.filter(row => (row._id.includes(id) && row.project_title.title.includes(title))))
-  }, [id, title])
+
+    setTempRows(rows?.filter(row => filt(row)))
+  }, [id, title,objective,institute])
 
   return (
     <div style={{ margin: "10px", }}>
@@ -36,19 +61,26 @@ export default function SearchPage() {
           />
         </Grid>
         <Grid item xs={3}>
-          <OutlinedInput id="outlined-basic" variant="outlined" value={title} fullWidth placeholder='Country' color="success"
+          <OutlinedInput id="outlined-basic" variant="outlined" value={title} fullWidth placeholder='Title' color="success"
             onChange={(e) => setTitle(e.target.value)}
           />
         </Grid><Grid item xs={3}>
-          <OutlinedInput id="outlined-basic" variant="outlined" fullWidth placeholder='BU' color="success" />
+          <OutlinedInput id="outlined-basic" variant="outlined" fullWidth placeholder='Objective' value={objective} 
+          
+          onChange={(e) => setObjective(e.target.value)}
+          
+          color="success" />
         </Grid><Grid item xs={3}>
-          <OutlinedInput id="outlined-basic" variant="outlined" fullWidth placeholder='State' color="success" />
+          <OutlinedInput id="outlined-basic" variant="outlined" fullWidth placeholder='Institute' 
+          value={institute}
+          onChange={(e) => setInstitute(e.target.value)}
+          color="success" />
         </Grid><Grid item xs={3}>
           <OutlinedInput id="outlined-basic" variant="outlined" fullWidth placeholder='IB Serial No.' color="success" />
         </Grid><Grid item xs={3}>
           <OutlinedInput id="outlined-basic" variant="outlined" fullWidth placeholder='Year' color="success" />
         </Grid><Grid item xs={3}>
-          <OutlinedInput id="outlined-basic" variant="outlined" fullWidth placeholder='Institute Name' color="success" />
+          <OutlinedInput id="outlined-basic" variant="outlined" fullWidth placeholder='Funding' color="success" />
         </Grid><Grid item xs={3}>
           <OutlinedInput id="outlined-basic" variant="outlined" fullWidth placeholder='Aggrement Type' color="success" />
         </Grid>
@@ -81,7 +113,7 @@ export default function SearchPage() {
       </Grid>
       <div container>
 
-        <SearchPageData rows={rows} />
+        <SearchPageData rows={tempRows} />
       </div>
 
 

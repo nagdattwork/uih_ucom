@@ -5,9 +5,11 @@ import MenuItem from '@mui/material/MenuItem';
 import { Avatar, IconButton } from '@mui/material';
 import {  useDispatch ,useSelector} from 'react-redux';
 import { logout } from '../features/userCred/userLogin';
+import { Link, useNavigate } from 'react-router-dom';
+import PersonIcon from '@mui/icons-material/Person';
 export default function BasicMenu(props) {
   const [user,setUser]=React.useState(useSelector((state)=>state.login))
-
+  const history=useNavigate()
   const dispatch=useDispatch()
   const [anchorEl, setAnchorEl] = React.useState(null);
   // console.log("Inside Menu bar",user)
@@ -29,7 +31,11 @@ export default function BasicMenu(props) {
         onClick={handleClick}
         color='success'
       >
-       <Avatar alt="Remy Sharp" src={process.env.REACT_APP_LINK+user.user.image } />
+       <Avatar src={process.env.REACT_APP_LINK+user.user.image } alt={user.user.image} >
+
+       <PersonIcon/>
+        </Avatar>
+       
       </IconButton>
       <Menu
         id="basic-menu"
@@ -40,7 +46,9 @@ export default function BasicMenu(props) {
           'aria-labelledby': 'basic-button',
         }}
       >
-        <MenuItem  onClick={handleClose}>Profile</MenuItem>
+      <Link to='/profile'>
+      <MenuItem  onClick={handleClose}>Profile</MenuItem>
+      </Link>
         <MenuItem onClick={handleClose}>My account</MenuItem>
 
         <MenuItem onClick={()=>{
@@ -48,6 +56,7 @@ export default function BasicMenu(props) {
           setAnchorEl(null)
           dispatch(logout())
           props.setLogin(false)
+          history("/")
         }}>Logout</MenuItem>
       </Menu>
     </div>

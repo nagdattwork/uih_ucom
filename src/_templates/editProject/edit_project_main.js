@@ -8,7 +8,7 @@ import Divider from '@mui/material/Divider';
 import AppBarMain from '../app_bar/app_bar';
 import ProjectDetails from './projectDetails';
 import CustomerDetails from './customerDetails';
-import { AppBar, Backdrop, BottomNavigation, CircularProgress, Paper, Toolbar } from '@mui/material';
+import { AppBar, Backdrop, BottomNavigation, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormHelperText, Grid, OutlinedInput, Paper, TextField, Toolbar } from '@mui/material';
 import SystemDetails from './systemDetails';
 import DocumentsDetails from './documentsDetails';
 import Fab from '@mui/material/Fab';
@@ -24,7 +24,8 @@ import axios from 'axios';
 import FiFunding from './fiFunding';
 import { useLocation } from 'react-router';
 import editData, { appendEdits } from '../features/projectData/editData';
-
+import { useNavigate } from 'react-router-dom';
+import DeleteIcon from '@mui/icons-material/Delete';
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -60,10 +61,12 @@ function a11yProps(index) {
 
 export default function EditProjectMain(props) {
 
-
+  let history = useNavigate();
   const [formSubmitBackdrop, setformSubmitBackdrop] = React.useState(false)
   const [snackbar, setSnackbar] = React.useState(false);
   const projectData = useSelector(state => state.editData)
+  const user=useSelector(state=>state.login)
+
   // const locationData=useLocation()
   // const [editData,setEditData]=React.useState(locationData.state.data)
   // const dispatch=useDispatch()
@@ -136,6 +139,7 @@ export default function EditProjectMain(props) {
   }
 
   const createProject = () => {
+
     const data = projectData.projectDetails
     const customerData = projectData.customerDetails
     const documentsData = projectData.documents
@@ -228,7 +232,6 @@ export default function EditProjectMain(props) {
         others:others===undefined?"":others
       },
       system: systemData,
-      owner: userData.user._id,
       fi_funding: {
         fi_funding_status: {
           fi_funding_funded: fiFundingData?.fi_funding_status?.fi_funding_funded,
@@ -238,17 +241,19 @@ export default function EditProjectMain(props) {
           fi_funding_uih_funding_bu_aprroval: approvalfile,
           fi_funding_customer_invoice: cifile
         }
-      }
+      },
+      updated_by:user?.user?._id,
 
     })
       .then(res => {
         console.log(res)
         setformSubmitBackdrop(false)
         setTimeout(() => {
-          window.location.href = '/search';
-          window.location.reload();
+          // window.location.href = '/search';
+          // window.location.reload();
+          history("/search")
           
-        }, 1000);
+        }, 100);
 
       })
       .catch(err => {
@@ -259,6 +264,11 @@ export default function EditProjectMain(props) {
 
 
   }
+
+
+  const [deleteDialong,setDeleteDialong]=React.useState(false)
+  const data = projectData.projectDetails
+
   return (
     <>
       {/* <Toolbar/> */}
@@ -314,20 +324,33 @@ export default function EditProjectMain(props) {
         <Toolbar />
 
       </div>
-      <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={5} >
-        <BottomNavigation style={{ marginBottom: "-4px", marginTop: "4px" }}>
+      <Grid   justifyContent="flex-end" container component={Paper} sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={5} spacing={1} padding={1} >
+       
           {/* <Typography> {editData.project_title.title}</Typography> */}
 
 
-          <Fab variant="extended" color='info' onClick={validateFirst}>
-            <PublishIcon sx={{ mr: 1 }} />
+          <Grid item>
+          <Button startIcon={ <PublishIcon />} variant="contained" color='info' onClick={validateFirst}>
+           
 
 
-            Update
-          </Fab>
+           Update
+         </Button>
+          </Grid>
 
-        </BottomNavigation>
-      </Paper>
+          <Grid item>
+          <Button startIcon={ <DeleteIcon />} 
+          
+          onClick={() =>setDeleteDialong(true)}
+          variant="contained" color='error'>
+           
+
+
+           Delete
+         </Button>
+          </Grid>
+
+      </Grid>
 
 
       <Snackbar open={snackbar} anchorOrigin={{ vertical: "top", horizontal: "right" }} autoHideDuration={1000} onClose={handleCloseSnackbar}>
@@ -340,8 +363,89 @@ export default function EditProjectMain(props) {
           Trying to fill invalid form
         </Alert>
       </Snackbar>
+      <DeleteDialog open={deleteDialong} setOpen={setDeleteDialong} title={data.title} projectId={projectData.projectId} />
 
 
     </>
+  );
+}
+
+
+
+//Delete Dialog
+
+
+ function DeleteDialog(props) {
+  const history=useNavigate()
+
+  const handleClose = () => {
+    props.setOpen(false);
+  };
+const [error,setError]=React.useState(false)
+  return (
+    <React.Fragment>
+     
+      <Dialog
+        open={props.open}
+        onClose={handleClose}
+        PaperProps={{
+          component: 'form',
+          onSubmit: (event) => {
+            event.preventDefault();
+            const formData = new FormData(event.currentTarget);
+            const formJson = Object.fromEntries(formData.entries());
+            const projectTitle = formJson.projectTitle;
+            if(projectTitle!==props.title){
+              setError(true)
+              return
+            }
+
+            backend.post("api/projects/deleteprojects", {
+              projectId: props.projectId
+            }).then((response) => {
+              history('/search')
+            })
+
+
+          },
+        }}
+      >
+        <DialogTitle>
+        Alert
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            To delete this project, Please enter project name
+          </DialogContentText>
+          <OutlinedInput
+            autoFocus
+            required
+            margin="dense"
+            id="name"
+            name="projectTitle"
+            placeholder="Project Title"
+            size='small'
+            style={{marginTop: '10px'}}
+            type="text"
+            fullWidth
+            variant="standard"
+            helperText="Project Title"
+            onChange={(e)=>{
+              if(props.title!==e.target.value){
+                setError(true)
+              }
+              else{
+                setError(false)
+              }
+            }}
+          />
+                <FormHelperText >{error ? 'Enter Correct project Title' :""}</FormHelperText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button type="submit">Delete</Button>
+        </DialogActions>
+      </Dialog>
+    </React.Fragment>
   );
 }

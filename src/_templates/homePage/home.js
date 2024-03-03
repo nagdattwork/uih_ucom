@@ -25,11 +25,12 @@ import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import { DataGrid } from '@mui/x-data-grid';
 import { IconButton } from '@mui/material';
 import homepageImage from '../../static/loginImage.png'
+import { useNavigate } from 'react-router';
 const defaultTheme = createTheme();
 
 export default function Home() {
     const user=useSelector((state)=>state)
-
+    const history=useNavigate()
 
     return (
         <div  >
@@ -77,7 +78,11 @@ export default function Home() {
                                 <Button variant='contained' color='success'>  Download</Button>
                             </Grid>
                             <Grid item xs={2} style={{marginTop:"-8px"}}>
-                            <Button  color='success' style={{marginBottom:"8px"}}>  Explore</Button>
+                            <Button  color='success' style={{marginBottom:"8px"}}
+                            onClick={()=>{
+                                history("/search")
+                            }}
+                            >  Explore</Button>
                             </Grid>
                            
                         </Grid>

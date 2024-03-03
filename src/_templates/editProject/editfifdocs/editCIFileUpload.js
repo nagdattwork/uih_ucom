@@ -27,41 +27,41 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 const EditCIFileUpload = () => {
-    const data=useSelector(state=>state.editData)
-    const docs=data.fiFundingDocuments
-    
-    const [files, setFiles] = useState(docs?.fi_funding_customer_invoice?[...docs?.fi_funding_customer_invoice]:[]);
+    const data = useSelector(state => state.editData)
+    const docs = data.fiFundingDocuments
+
+    const [files, setFiles] = useState(docs?.fi_funding_customer_invoice ? [...docs?.fi_funding_customer_invoice] : []);
     const [loading, setLoading] = useState(false);
-    const[visible,setVisible]=useState(false)
-    const [uploadedFiles,setUploadedFiles]=useState([])
-    const dispatch=useDispatch()
-   
-    useEffect(()=>{
-        
-        let documentsData=docs
-        documentsData={
+    const [visible, setVisible] = useState(false)
+    const [uploadedFiles, setUploadedFiles] = useState([])
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+
+        let documentsData = docs
+        documentsData = {
             ...documentsData,
-           ... {
-            fi_funding_customer_invoice:uploadedFiles.map((data) => {return (data) })
+            ... {
+                fi_funding_customer_invoice: uploadedFiles.map((data) => { return (data) })
             }
         }
-        
+
         dispatch(appendEdits({
-            fiFundingDocuments:documentsData
+            fiFundingDocuments: documentsData
         }))
 
 
-    },[uploadedFiles])
+    }, [uploadedFiles])
     useEffect(() => {
-       const t=
-       files.filter((ele)=>{
-        return ele?.uploaded_path
-       })
-       setUploadedFiles(t)
-      
+        const t =
+            files.filter((ele) => {
+                return ele?.uploaded_path
+            })
+        setUploadedFiles(t)
+
     }, [files])
 
-   
+
     const handleFileChange = (e) => {
 
         const filesToAdd = files
@@ -106,7 +106,7 @@ const EditCIFileUpload = () => {
                 })
             });
             setFiles([...files])
-           
+
         } catch (error) {
             console.error(error);
         } finally {
@@ -139,61 +139,61 @@ const EditCIFileUpload = () => {
     return (
         <div>
             {/* <input type="file" multiple onChange={handleFileChange} /> */}
-           
+
             <Grid container spacing={2} >
-               
-                <Grid item>
+
+                <Grid item > 
 
 
                     <ButtonGroup variant="contained" aria-label="Basic button group">
-                       <Button
+                        <Button
                             component="label"
                             role={undefined}
                             variant="contained"
                             tabIndex={-1}
                         >
-                            <AttachFileTwoToneIcon/>
+                            <AttachFileTwoToneIcon />
                             <VisuallyHiddenInput type="file" multiple onChange={handleFileChange} />
                         </Button>
-                         <Button variant="contained" color="primary" onClick={handleUpload} disabled={files.length === 0 || loading}>
+                        <Button variant="contained" color="primary" onClick={handleUpload} disabled={files.length === 0 || loading}>
                             {loading ? <CircularProgress size={24} /> : <CloudUploadTwoToneIcon />}
                         </Button>
-                        <Button onClick={()=>setVisible(!visible)}>
-                           {
-                            visible?<VisibilityOffTwoToneIcon/>: <VisibilityTwoToneIcon/>
-                           }
-                            
-                            </Button>
+                        <Button onClick={() => setVisible(!visible)}>
+                            {
+                                visible ? <VisibilityOffTwoToneIcon /> : <VisibilityTwoToneIcon />
+                            }
+
+                        </Button>
                     </ButtonGroup>
 
                 </Grid>
 
 
             </Grid>
-           <Grid container spacing={2} style={{marginTop:"5px"}}>
-          <Grid item xs={12}>
-          <Collapse in={visible} component={Paper}>
-           <List>
-                {files.map((file, index) => (
-                    <ListItem key={index}>
-                        <ListItemText primary={file.name} />
-                        <ListItemSecondaryAction>
-                            <IconButton color='error' edge="end" aria-label="delete" disabled={file?.uploaded_path}
-                                onClick={() => handleDeleteFrontend(index)}
-                            >
-                                <DeleteIcon />
-                            </IconButton>
+            <Grid container spacing={2} style={{ marginTop: "5px" }}>
+                <Grid item xs={12}>
+                    <Collapse in={visible} component={Paper}>
+                        <List >
+                            {files.map((file, index) => (
+                                <ListItem key={index} >
+                                    <ListItemText primary={file.name} />
+                                    <ListItemSecondaryAction>
+                                        <IconButton color='error' edge="end" aria-label="delete" disabled={file?.uploaded_path}
+                                            onClick={() => handleDeleteFrontend(index)}
+                                        >
+                                            <DeleteIcon />
+                                        </IconButton>
 
-                            {file?.uploaded_path &&
-                                (<IconButton edge="end" color='primary' aria-label="delete" onClick={() => handleDelete(file?.uploaded_path, file)}>
-                                    <CloudOffIcon />
-                                </IconButton>)}
-                        </ListItemSecondaryAction>
-                    </ListItem>
-                ))}
-            </List></Collapse>
-          </Grid>
-           </Grid>
+                                        {file?.uploaded_path &&
+                                            (<IconButton edge="end" color='primary' aria-label="delete" onClick={() => handleDelete(file?.uploaded_path, file)}>
+                                                <CloudOffIcon />
+                                            </IconButton>)}
+                                    </ListItemSecondaryAction>
+                                </ListItem>
+                            ))}
+                        </List></Collapse>
+                </Grid>
+            </Grid>
         </div>
     );
 };

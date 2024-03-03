@@ -22,7 +22,7 @@ export default function FiFunding() {
 
 
     let temp=(fundingDataT?.fi_funding_status?.fi_funding_uih_funding_bu_aprroval?.split(","))
-    temp=temp?.filter((file)=>{return file!=""} )
+    temp=temp?.filter((file)=>{return file!="" && file!="undefined" } )
 
 
 
@@ -30,7 +30,7 @@ export default function FiFunding() {
 
 
     let temp2=(fundingDataT?.fi_funding_status?.fi_funding_customer_invoice?.split(","))
-    temp2=temp2?.filter((file)=>{return file!=""} )
+    temp2=temp2?.filter((file)=>{return file!="" && file!="undefined"} )
 
     const [oldCustomerInvoices, setOldCustomerInvoices] = useState(temp2?temp2:[])
     useEffect(() => {

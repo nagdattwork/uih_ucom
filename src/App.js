@@ -15,6 +15,9 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import EditProjectMain from './_templates/editProject/edit_project_main';
 import EditMiddle from './_templates/editProject/editMiddle';
 import FileUpload from './_templates/TesterTab/fileUpload';
+import Profile from './_templates/profile/profile';
+import CreateAccount from './_templates/profile/createAccount';
+import Account from './_templates/profile/account';
 
 // Define a custom theme
 const theme = createTheme({
@@ -25,6 +28,7 @@ const theme = createTheme({
     },
     primary: {
       main: '#3f51b5', // Change this to your desired primary color
+      light:"#9fa8da"
     },
     info:{
       main:"#00695c"
@@ -37,6 +41,8 @@ function App() {
   const dispatch=useDispatch()
 
   useEffect(()=>{
+
+    // localStorage.removeItem('user')
     if(localStorage.getItem('user'))
     {
     const temp=JSON.parse(localStorage.getItem('user'))
@@ -72,13 +78,23 @@ function App() {
              <Route index element={<Home />} />
              <Route path="createnew" element={<CreateNewMain />} />
              <Route path="dashboard" element={<Dashboard />} />
-             <Route path="search" element={<SearchPage />} />
+             <Route path="search" element={<SearchPage />} forceRefresh={true} />
              <Route path="templates" element={<TemplateLC />} />
              <Route path="editproject" element={<EditMiddle />} />
              <Route path="filepush" element={<FileUpload />} />
 
+             <Route path="/profile" element={<Profile />} />
+             <Route path="/accounts" element={<Account />} />
+
          </Routes>
-       </BrowserRouter>):(<Login setLogin={setLogin}/>)
+       </BrowserRouter>):(
+        <BrowserRouter>
+        <Routes>
+        <Route index element={<Login setLogin={setLogin}/>}/>
+        <Route path='createaccount' element={<CreateAccount/>}/>
+        </Routes>
+        </BrowserRouter>
+       )
      }
   
      </div>)

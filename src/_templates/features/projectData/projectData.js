@@ -50,6 +50,7 @@ export const projectDataSlice = createSlice({
       state.documents={}
       state.system= {}
       state.fiFunding={}
+      state.projectId=""
 
      
 

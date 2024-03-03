@@ -13,11 +13,11 @@ import backend from '../../app/baseLink';
 import { useSelector } from 'react-redux';
 import { alpha } from '@mui/material/styles';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
-import { IconButton } from '@mui/material';
+import { Avatar, Grid, IconButton, Tooltip } from '@mui/material';
 import ModeEditTwoToneIcon from '@mui/icons-material/ModeEditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import tableCSS from './table.css'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#7986cb',
@@ -46,12 +46,12 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 export default function SearchPageData(props) {
   const [rows,setRows]=React.useState([])
-  const currentUser=useSelector((state)=>state.login)
-  React.useEffect(()=>{
-    backend.post("api/projects/getmyprojects",{id:currentUser.user._id}).then((res)=>{
-      setRows(res.data.response)
-    })
-  },[])
+  // const currentUser=useSelector((state)=>state.login)
+  // React.useEffect(()=>{
+  //   backend.post("api/projects/getmyprojects",{id:currentUser.user._id}).then((res)=>{
+  //     setRows(res.data.response)
+  //   })
+  // },[])
   return (
    <div>
     
@@ -73,8 +73,10 @@ const StripedDataGrid = styled(DataGrid)(({ theme }) => ({
     backgroundColor: theme.palette.grey[200],
     '&:hover, &.Mui-hovered': {
       backgroundColor: alpha(theme.palette.primary.main, ODD_OPACITY),
+      cursor:"pointer",
       '@media (hover: none)': {
         backgroundColor: 'transparent',
+
       },
     },
     '&.Mui-selected': {
@@ -98,9 +100,19 @@ const StripedDataGrid = styled(DataGrid)(({ theme }) => ({
         },
       },
     },
+    '& .MuiDataGrid-row':{
+      cursor:"pointer",
+    },
   },
+ [ `& .${gridClasses.row}.odd`]:{
+  '&:hover, &.Mui-hovered': {
+    cursor:"pointer"
+  }
+
+ }
 }));
 function CustomDataGrid(props) {
+  const currentUser=useSelector(state=>state.login)
   const deepCopy=(obj)=> {
     // Check if the input is an object or array
     if (typeof obj !== 'object' || obj === null) {
@@ -120,54 +132,109 @@ function CustomDataGrid(props) {
 }
 //   const classes = useStyles();
 const columns = [
-  { field: '_id', headerName: 'ID',width:200 },
-  { field: 'project_title.title', headerName: 'Title',valueGetter: (params) => params.row.project_title.title,width:180 },
-  { field: 'project_title.objective', headerName: 'Objective',valueGetter: (params) => params.row.project_title.objective,width:260,  cellClassName: 'wrap-cell-content'},
-  { field: 'customer_details.institutes', headerName: 'Institutes',valueGetter: (params) => [...params.row.customer_details.institutes.map((data)=>data.institute_name)].toString(),width:350,  cellClassName: 'wrap-cell-content'},
-  { field: 'project_title.project_duration', headerName: 'Duration',valueGetter: (params) => params.row.project_title.project_duration,width:90,  cellClassName: 'wrap-cell-content'},
-  { field: 'project_title.act_start_date', headerName: 'Start Date',valueGetter: (params) => params.row.project_title.act_start_date,width:110,  cellClassName: 'wrap-cell-content'},
-  { field: 'project_title.current_stage', headerName: 'Status',valueGetter: (params) => params.row.project_title.current_stage,width:100,  cellClassName: 'wrap-cell-content'},
-  { field: 'fi_funding?.fi_funding_status', headerName: 'Funded?',valueGetter: (params) => params.row.fi_funding?.fi_funding_status?.fi_funding_funded==true?"YES":"NO",width:100,  cellClassName: 'wrap-cell-content'},
+  { field: '_id', headerName: 'ID',flex:0.5,clickable:true },
+  { field: 'project_title.title', headerName: 'Title',valueGetter: (params) => params.row.project_title.title,flex:1,resizable:true },
+  { field: 'project_title.objective', headerName: 'Objective',flex:1, valueGetter: (params) =>params.row.project_title.objective, cellClassName: 'wrap-cell-content',
+},
+  { field: 'customer_details.institutes', headerName: 'Institutes',valueGetter: (params) => [...params.row.customer_details.institutes.map((data)=>data.institute_name)].toString(),flex:1,  },
+  { field: 'project_title.project_duration', headerName: 'Duration',valueGetter: (params) => params.row.project_title.project_duration,flex:0.5,  cellClassName: 'wrap-cell-content'},
+  { field: 'project_title.act_start_date', headerName: 'Start Date',valueGetter: (params) => params.row.project_title.act_start_date,flex:0.5,  cellClassName: 'wrap-cell-content'},
+  { field: 'project_title.current_stage', headerName: 'Status',valueGetter: (params) => params.row.project_title.current_stage,flex:0.5,  cellClassName: 'wrap-cell-content'},
+  { field: 'fi_funding?.fi_funding_status', headerName: 'Funded?',valueGetter: (params) => params.row.fi_funding?.fi_funding_status?.fi_funding_funded==true?"YES":"NO",flex:0.5, },
 
-  {
-    field: 'actions',
-    headerName: 'Actions',
-    renderCell: (params) =>{
-      const data=params
-      return(
-      <div>
+  // {
+  //   field: 'actions',
+  //   headerName: 'Actions',
+  //   renderCell: (params) =>{
+  //     return(
+  //     <div>
        
-        <div align="left">
-                <Link to='/editproject' state={
-                { data: params.row}
-                }>
-                <IconButton>
-                <ModeEditTwoToneIcon color='success'/>
-                </IconButton>
-                </Link>
-                <IconButton>
-                    <DeleteTwoToneIcon color='error'/>
-                </IconButton>
-              </div>
-      </div>
-    )},
-  },
+  //       <div align="left">
+  //               <Link to='/editproject' state={
+  //               { data: params.row}
+  //               }>
+  //               <IconButton>
+  //               <ModeEditTwoToneIcon color='success'/>
+  //               </IconButton>
+  //               </Link>
+  //               <IconButton>
+  //                   <DeleteTwoToneIcon color='error'/>
+  //               </IconButton>
+  //             </div>
+  //     </div>
+  //   )},
+  // },
 ];
 
+if(currentUser.user.userType!=='basic'){
+  columns.push(
+  { field: 'owner',flex:1, headerName: 'Owner',renderCell: (params) =>{
+    return(
+      <div>
+        <Grid container spacing={1}>
+          <Grid item xs={'auto'}>
+          <Avatar sx={{ width: 24, height: 24 }} src= { process.env.REACT_APP_DOCUMENT_PATH+ params.row.owner.image}/>  
+
+          </Grid>
+          <Grid item xs='auto'>
+          <b>{params.row.owner?.fname }</b>
+          </Grid>
+        </Grid>
+      </div>
+    )
+  },flex:1,resizable:true }
+
+  )
+}
+
+if(true){
+  columns.push(
+    { field: 'Updated By', headerName: 'Updater',renderCell: (params) =>{
+      if(!(params.row?.updated_by)){
+        return <>
+        No updater
+        </>
+      }
+      return(
+        <div>
+          <Grid container spacing={1}>
+            <Grid item>
+            <Avatar sx={{ width: 24, height: 24 }} src= { process.env.REACT_APP_DOCUMENT_PATH+ params.row?.updated_by?.image}/>  
+  
+            </Grid>
+            <Grid item>
+            <b>{params.row?.updated_by?.fname }</b>
+            </Grid>
+          </Grid>
+        </div>
+      )
+    },flex:1,resizable:true }
+  
+    )
+}
+
+const history=useNavigate()
+const handleRowClick = (params) => {
+  history('/editproject',{
+    state:{
+      data:params.row
+    }
+  })
+};
+
   return (
-    <div style={{ maxHeight: 550, width: '100%',marginTop:"20px" }}>
+    <div style={{ height: 550, width: '100%',marginTop:"20px" }}>
       <StripedDataGrid
         rows={props.rows}
         columns={columns}
-        pageSize={8}
-        rowsPerPageOptions={[8]}
+        // getRowHeight={() => 'auto'}
         getRowId={(row) => row._id}
         // headerClassName={classes.customHeader}
         getRowClassName={(params) =>
           params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
         }
         headerClassName="header-style"
-        pageSizeOptions={[8,16,24]}
+        onRowClick={handleRowClick}
       />
     </div>
   );

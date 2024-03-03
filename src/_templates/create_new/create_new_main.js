@@ -22,7 +22,7 @@ import { tab1Validation, tab2Validation } from './validations'
 import backend from '../../app/baseLink';
 import axios from 'axios';
 import FiFunding from './fiFunding';
-import { useLocation } from 'react-router';
+import {useNavigate } from 'react-router';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -59,7 +59,8 @@ function a11yProps(index) {
 
 export default function CreateNewMain() {
 
- 
+  const history=useNavigate()
+  const dispatch=useDispatch()
   const [formSubmitBackdrop, setformSubmitBackdrop] = React.useState(false)
   const [snackbar, setSnackbar] = React.useState(false);
   const projectData = useSelector(state => state.projectData)
@@ -151,7 +152,11 @@ export default function CreateNewMain() {
     })
       .then(res => {
         console.log(res)
-        setTimeout(() => window.location.reload(), 1000);
+        setTimeout(() => {
+          dispatch(makeEmpty({}))
+          setformSubmitBackdrop(false)
+          history('/')
+        }, 100);
 
       })
 

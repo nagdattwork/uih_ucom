@@ -15,6 +15,7 @@ import { login } from '../features/userCred/userLogin'
 import backgroundImage from '../../static/homePageImage.jpg'
 
 import backend from '../../app/baseLink'
+import { BrowserRouter, Route } from 'react-router-dom';
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -48,7 +49,10 @@ export default function Login(props) {
 
       if (response.data.message=="Login successfull")
      { 
-      console.log(response.data)
+      if(!response.data.user.approved){
+        alert("Your account is not approved yet")
+        return
+      }
       localStorage.setItem('user',JSON.stringify({
         loggedIn:true,
         user:response.data.user,
@@ -139,9 +143,14 @@ export default function Login(props) {
                 Sign In
               </Button>
               <Grid container>
-                <Grid item xs>
+                <Grid item xs={6}>
                   <Link href="#" variant="body2">
                     Forgot password?
+                  </Link>
+                </Grid>
+                <Grid item xs={6} style={{textAlign:'right'}}>
+                  <Link href="/createaccount"  variant="body2">
+                    Create Account
                   </Link>
                 </Grid>
                 {/* <Grid item>
@@ -154,6 +163,8 @@ export default function Login(props) {
             </Box>
           </Box>
         </Grid>
+       
+        
       </Grid>
     </div>
   );
