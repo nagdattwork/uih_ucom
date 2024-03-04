@@ -13,7 +13,7 @@ import backend from '../../app/baseLink';
 import { useSelector } from 'react-redux';
 import { alpha } from '@mui/material/styles';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
-import { Avatar, Grid, IconButton, Tooltip } from '@mui/material';
+import { Avatar, Grid, IconButton, ListItem, ListItemAvatar, ListItemText, Tooltip } from '@mui/material';
 import ModeEditTwoToneIcon from '@mui/icons-material/ModeEditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import tableCSS from './table.css'
@@ -150,15 +150,20 @@ if(currentUser.user.userType!=='basic'){
   { field: 'owner',flex:1, headerName: 'Owner',renderCell: (params) =>{
     return(
       <div>
+        <Tooltip title={new Date(params.row.createdAt).toString()}>
         <Grid container spacing={1}>
-          <Grid item xs={'auto'}>
+        
+        <Grid item xs='auto'>
+        <ListItem>
+          <ListItemAvatar>
           <Avatar sx={{ width: 24, height: 24 }} src= { process.env.REACT_APP_DOCUMENT_PATH+ params.row?.owner?.image}/>  
 
-          </Grid>
-          <Grid item xs='auto'>
-          <b>{params.row?.owner?.fname }</b>
-          </Grid>
+          </ListItemAvatar>
+        <ListItemText primary={params.row?.owner?.fname } secondary={ new Date(params.row.createdAt).toISOString().split('T')[0]}/>
+        </ListItem>
         </Grid>
+      </Grid>
+        </Tooltip>
       </div>
     )
   },flex:1,resizable:true }
@@ -176,16 +181,21 @@ if(true){
       }
       return(
         <div>
-          <Grid container spacing={1}>
-            <Grid item>
-            <Avatar sx={{ width: 24, height: 24 }} src= { process.env.REACT_APP_DOCUMENT_PATH+ params.row?.updated_by?.image}/>  
-  
-            </Grid>
-            <Grid item>
-            <b>{params.row?.updated_by?.fname }</b>
-            </Grid>
-          </Grid>
-        </div>
+       <Tooltip title={new Date(params.row.updatedAt).toString()}>
+       <Grid container spacing={1}>
+        
+        <Grid item xs='auto'>
+        <ListItem>
+          <ListItemAvatar>
+          <Avatar sx={{ width: 24, height: 24 }} src= { process.env.REACT_APP_DOCUMENT_PATH+ params.row?.updated_by?.image}/>  
+
+          </ListItemAvatar>
+        <ListItemText primary={params.row?.updated_by?.fname } secondary={ new Date(params.row.updatedAt).toISOString().split('T')[0]}/>
+        </ListItem>
+        </Grid>
+      </Grid>
+       </Tooltip>
+      </div>
       )
     },flex:1,resizable:true }
   
