@@ -58,6 +58,8 @@ export default function FiFunding() {
 
     const downloadFiles = (urlGlob) => {
         // url = process.env.REACT_APP_DOCUMENT_PATH + url;
+
+        console.log(urlGlob,urlGlob.split("/")[1].split(".").splice(-2).join("."))
         urlGlob=urlGlob.replaceAll("\\","/")
         // url=url.replaceAll("","\\\\")
 
