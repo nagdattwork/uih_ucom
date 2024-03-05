@@ -219,7 +219,9 @@ export default function FiFunding() {
                 </Grid>
                 <Grid item xs={6}>
                     <h4>Previously Uploaded Customer Invoice Files Files</h4>
-                    {oldCustomerInvoices.map((data, index) => (
+                    {oldCustomerInvoices.map((data, index) => {
+                        console.log(data,"-<Original, Copy->",data?.split("/")[1]?.split(".")?.splice(-2)?.join("."))
+                        return (
                         <ListItem key={index}  >
 
                             <Stack sx={{ width: '100%' }} direction={'row'} >
@@ -235,11 +237,13 @@ export default function FiFunding() {
                                             </IconButton>
                                         </>
                                     }>
-                                    {data}
+                                    {data?.split("/")[1]?.split(".")?.splice(-2)?.join(".")
+                                   
+                                    }
                                 </Alert>
                             </Stack>
                         </ListItem>
-                    ))}
+                    )})}
                 </Grid>
 
 
