@@ -248,9 +248,10 @@ const EditPDDFileUpload = () => {
             <List> {
                            
                             prevPdd.map((file,index)=>{
+                                    console.log(file?.split("\\")[1]?.split(".")?.splice(1)?.join("."),file)
                              return ( 
                                  <ListItem>
-                                    <ListItemText primary={file?.split("\\")[1]?.split(".")?.splice(-2)?.join(".")}/>
+                                    <ListItemText primary={file?.split("\\")[1]?.split(".")?.splice(1)?.join(".")}/>
                                  <ListItemSecondaryAction>
                                  <IconButton color='info' onClick={()=>{downloadFiles(file)}}>
                                         <Download />
@@ -261,7 +262,8 @@ const EditPDDFileUpload = () => {
                                     </ListItemSecondaryAction>
                                  </ListItem>
                               )
-                            })
+                            }
+                            )
                             
                            } </List>
             <Typography style={{marginLeft:"10px"}}> <b >Previous Files</b></Typography>

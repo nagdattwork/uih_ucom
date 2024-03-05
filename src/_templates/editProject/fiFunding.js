@@ -75,7 +75,7 @@ export default function FiFunding() {
                 const link = document.createElement('a');
                 link.href = url;
                 console.log(urlGlob.split("/")[1].split(".").splice(-2).join("."))
-                link.setAttribute('download',urlGlob.split("/")[1].split(".").splice(0).join(".")); // Modify filename as needed
+                link.setAttribute('download',urlGlob.split("/")[1].split(".").splice(1).join(".")); // Modify filename as needed
                 // Append the link to the body
                 document.body.appendChild(link);
                 // Click the link to initiate the download
@@ -214,7 +214,7 @@ export default function FiFunding() {
                                             </IconButton>
                                         </>
                                     }>
-                                     {data?.split("/")[1]?.split(".")?.splice(0)?.join(".")}
+                                     {data?.split("/")[1]?.split(".")?.splice(1)?.join(".")}
                                 </Alert>
                             </Stack>
                         </ListItem>
@@ -240,7 +240,7 @@ export default function FiFunding() {
                                             </IconButton>
                                         </>
                                     }>
-                                    {data?.split("/")[1]?.split(".")?.splice(0)?.join(".")
+                                    {data?.split("/")[1]?.split(".")?.splice(1)?.join(".")
                                    
                                     }
                                 </Alert>

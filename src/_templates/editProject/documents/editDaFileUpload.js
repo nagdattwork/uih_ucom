@@ -241,9 +241,10 @@ const EditDAFileUpload = () => {
             <List> {
                            
                             prevDA.map((file,index)=>{
+
                              return ( 
                                  <ListItem>
-                                    <ListItemText primary= {file?.split("\\")[1]?.split(".")?.splice(-2)?.join(".")}/>
+                                    <ListItemText primary= {file?.split("\\")[1]?.split(".")?.splice(1)?.join(".")}/>
                                  <ListItemSecondaryAction>
                                  <IconButton color='info' onClick={()=>{downloadFiles(file)}}>
                                         <Download />
@@ -254,7 +255,8 @@ const EditDAFileUpload = () => {
                                     </ListItemSecondaryAction>
                                  </ListItem>
                               )
-                            })
+                            }
+                            )
                             
                            } </List>
            <Typography style={{marginLeft:"10px"}}>
