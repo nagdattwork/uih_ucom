@@ -440,6 +440,8 @@ const [error,setError]=React.useState(false)
             }}
           />
                 <FormHelperText >{error ? 'Enter Correct project Title' :""}</FormHelperText>
+
+                <Alert fullWidth severity="error">All documents will be deleted along with project</Alert>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>

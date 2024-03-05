@@ -147,9 +147,40 @@ const EditOtherFileUpload = () => {
         })
         setFiles(tem)
     }
-    const downloadFiles = (url) => {
-        url = process.env.REACT_APP_DOCUMENT_PATH + url;
-        window.open(url, "_blank")
+    const downloadFiles = (urlGlob) => {
+        // url = process.env.REACT_APP_DOCUMENT_PATH + url;
+        // window.open(url, "_blank")
+    
+        urlGlob=urlGlob.replaceAll("\\","/")
+        // url=url.replaceAll("","\\\\")
+
+        // window.open(url, "_self")
+
+        try {
+            backend.post('/download', { url:urlGlob }, {
+                responseType: 'blob'
+            }).then((response) => {
+                // Create a URL for the blob
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                // Create a link element
+                const link = document.createElement('a');
+                link.href = url;
+                console.log(urlGlob.split("/")[1].split(".").splice(-2).join("."))
+                link.setAttribute('download',urlGlob.split("/")[1].split(".").splice(-2).join(".")); // Modify filename as needed
+                // Append the link to the body
+                document.body.appendChild(link);
+                // Click the link to initiate the download
+                link.click();
+                // Clean up
+                link.parentNode.removeChild(link);
+
+            })
+
+
+        } catch (error) {
+            console.error('Error downloading file:', error);
+        }
+    
     }
     const handleDeletePrevFiles =async (filename,indexT) => {
       
@@ -210,7 +241,7 @@ const EditOtherFileUpload = () => {
                             prevOthers.map((file, index) => {
                                 return (
                                     <ListItem>
-                                        <ListItemText primary={file} />
+                                        <ListItemText primary={file.split("\\")[1].split(".").splice(-2).join(".")} />
                                         <ListItemSecondaryAction>
                                             <IconButton color='info' onClick={() => { downloadFiles(file) }}>
                                                 <Download />

@@ -8,7 +8,7 @@ import Divider from '@mui/material/Divider';
 import AppBarMain from '../app_bar/app_bar';
 import ProjectDetails from './projectDetails';
 import CustomerDetails from './customerDetails';
-import { AppBar, Backdrop, BottomNavigation, CircularProgress, Paper, Toolbar } from '@mui/material';
+import { AppBar, Backdrop, BottomNavigation, Button, CircularProgress, Grid, Paper, Toolbar } from '@mui/material';
 import SystemDetails from './systemDetails';
 import DocumentsDetails from './documentsDetails';
 import Fab from '@mui/material/Fab';
@@ -217,22 +217,33 @@ export default function CreateNewMain() {
         <Toolbar />
 
       </div>
-      <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={5} >
-        <BottomNavigation style={{ marginBottom: "-4px", marginTop: "4px" }}>
+      <Grid   justifyContent="flex-end" container component={Paper} sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={5} spacing={1} padding={1} >
+       
+          {/* <Typography> {editData.project_title.title}</Typography> */}
 
-          <Fab variant="extended" color='primary' style={{marginRight:"10px"}}>
-            <SaveAsIcon sx={{ mr: 1 }} /> Save
-          </Fab>
-          <Fab variant="extended" color='info' onClick={validateFirst}>
-            <PublishIcon sx={{ mr: 1 }} />
-            
-            
-            Submit
-          </Fab>
 
-        </BottomNavigation>
-      </Paper>
+          <Grid item>
+          <Button startIcon={ <PublishIcon />} variant="contained" color='info' onClick={validateFirst}>
+           
 
+
+           Submit
+         </Button>
+          </Grid>
+
+          <Grid item>
+          {/* <Button startIcon={ <DeleteIcon />} 
+          
+          onClick={() =>setDeleteDialong(true)}
+          variant="contained" color='error'>
+           
+
+
+           Delete
+         </Button> */}
+          </Grid>
+
+      </Grid>
 
       <Snackbar open={snackbar} anchorOrigin={{ vertical: "top", horizontal: "right" }} autoHideDuration={1000} onClose={handleCloseSnackbar}>
         <Alert

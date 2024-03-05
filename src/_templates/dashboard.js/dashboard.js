@@ -113,7 +113,7 @@ const Dashboard = () => {
       {/* <Toolbar/> */}
       <Box >
       <Grid container spacing={2} padding={2} sx={{ height: '100%',  }}>
-        <Grid item xs={3}>
+        {/* <Grid item xs={3}>
         
            <Card>
            <PieChart {...projectTypeData} height={200} />
@@ -124,7 +124,7 @@ const Dashboard = () => {
           <Card  >
             <StackedBarChart />
           </Card>
-        </Grid>
+        </Grid> */}
         <Grid item xs={3}>
           <Card >
             <CardContent style={{textAlign:"center"}}>

@@ -9,6 +9,7 @@ import { appendEdits } from '../features/projectData/editData';
 import EditAprovalFileUpload from './editfifdocs/editApprovalFileUpload';
 import EditCIFileUpload from './editfifdocs/editCIFileUpload';
 import backend from '../../app/baseLink';
+import { Sync } from '@mui/icons-material';
 export default function FiFunding() {
     //Global Redux
     const dispatch = useDispatch()
@@ -55,9 +56,37 @@ export default function FiFunding() {
         }))
     }, [isFunded, whoFunded, bu, amount, oldApprovalFiles, oldCustomerInvoices])
 
-    const downloadFiles = (url) => {
-        url = process.env.REACT_APP_DOCUMENT_PATH + url;
-        window.open(url, "_blank")
+    const downloadFiles = (urlGlob) => {
+        // url = process.env.REACT_APP_DOCUMENT_PATH + url;
+        urlGlob=urlGlob.replaceAll("\\","/")
+        // url=url.replaceAll("","\\\\")
+
+        // window.open(url, "_self")
+
+        try {
+            backend.post('/download', { url:urlGlob }, {
+                responseType: 'blob'
+            }).then((response) => {
+                // Create a URL for the blob
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                // Create a link element
+                const link = document.createElement('a');
+                link.href = url;
+                console.log(urlGlob.split("/")[1].split(".").splice(-2).join("."))
+                link.setAttribute('download',urlGlob.split("/")[1].split(".").splice(-2).join(".")); // Modify filename as needed
+                // Append the link to the body
+                document.body.appendChild(link);
+                // Click the link to initiate the download
+                link.click();
+                // Clean up
+                link.parentNode.removeChild(link);
+
+            })
+
+
+        } catch (error) {
+            console.error('Error downloading file:', error);
+        }
     }
     const handleDeleteApprovalFile = async (filename, indexToDelete) => {
         if (!filename) alert("file not uploaded")
@@ -161,51 +190,54 @@ export default function FiFunding() {
 
                 <Grid item xs={6}>
                     <h4>Previously Uploaded Approval Files</h4>
-                            {oldApprovalFiles.map((data, index) => (
-                                <ListItem key={index}  >
+                    {oldApprovalFiles.map((data, index) => (
+                        <ListItem key={index}  >
 
-                                    <Stack sx={{ width: '100%' }} direction={'row'} >
-                                        <Alert icon={false} severity='info'
-                                            sx={{ width: '100%' }}
-                                            action={
-                                                <>
-                                                    <IconButton color='info' onClick={() => { downloadFiles(data) }}>
-                                                        <DownloadIcon />
-                                                    </IconButton>
-                                                    <IconButton color='error' onClick={() => handleDeleteApprovalFile(data, index)}>
-                                                        <DeleteIcon />
-                                                    </IconButton>
-                                                </>
-                                            }>
-                                            {data}
-                                        </Alert>
-                                    </Stack>
-                                </ListItem>
-                            ))}
+                            <Stack sx={{ width: '100%' }} direction={'row'} >
+                                <Alert icon={false} severity='info'
+                                    sx={{ width: '100%' }}
+                                    action={
+                                        <>
+                                            {/* <a href={process.env.REACT_APP_DOCUMENT_PATH + data} download>
+                                                <DownloadIcon />
+                                                </a> */}
+                                            <IconButton color='info' onClick={() => { downloadFiles(data) }}>
+                                                <DownloadIcon />
+                                            </IconButton>
+                                            <IconButton color='error' onClick={() => handleDeleteApprovalFile(data, index)}>
+                                                <DeleteIcon />
+                                            </IconButton>
+                                        </>
+                                    }>
+                                    {data.split("\\")[1].split(".").splice(-2).join(".")}
+                                </Alert>
+                            </Stack>
+                        </ListItem>
+                    ))}
                 </Grid>
                 <Grid item xs={6}>
                     <h4>Previously Uploaded Customer Invoice Files Files</h4>
                     {oldCustomerInvoices.map((data, index) => (
-                                <ListItem key={index}  >
+                        <ListItem key={index}  >
 
-                                    <Stack sx={{ width: '100%' }} direction={'row'} >
-                                        <Alert icon={false} severity='info'
-                                            sx={{ width: '100%' }}
-                                            action={
-                                                <>
-                                                    <IconButton color='info' onClick={() => { downloadFiles(data) }}>
-                                                        <DownloadIcon />
-                                                    </IconButton>
-                                                    <IconButton color='error' onClick={() => handleDeleteCIFile(data, index)}>
-                                                        <DeleteIcon />
-                                                    </IconButton>
-                                                </>
-                                            }>
-                                            {data}
-                                        </Alert>
-                                    </Stack>
-                                </ListItem>
-                            ))}
+                            <Stack sx={{ width: '100%' }} direction={'row'} >
+                                <Alert icon={false} severity='info'
+                                    sx={{ width: '100%' }}
+                                    action={
+                                        <>
+                                            <IconButton color='info' onClick={() => { downloadFiles(data) }}>
+                                                <DownloadIcon />
+                                            </IconButton>
+                                            <IconButton color='error' onClick={() => handleDeleteCIFile(data, index)}>
+                                                <DeleteIcon />
+                                            </IconButton>
+                                        </>
+                                    }>
+                                    {data.split("\\")[1].split(".").splice(-2).join(".")}
+                                </Alert>
+                            </Stack>
+                        </ListItem>
+                    ))}
                 </Grid>
 
 
