@@ -244,7 +244,7 @@ const EditDAFileUpload = () => {
 
                              return ( 
                                  <ListItem>
-                                    <ListItemText primary= {file?.split("\\")[1]?.split(".")?.splice(1)?.join(".")}/>
+                                    <ListItemText primary= {file?.split("/")[1]?.split(".")?.splice(1)?.join(".")}/>
                                  <ListItemSecondaryAction>
                                  <IconButton color='info' onClick={()=>{downloadFiles(file)}}>
                                         <Download />
