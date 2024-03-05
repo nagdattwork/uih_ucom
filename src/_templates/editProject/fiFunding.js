@@ -59,7 +59,7 @@ export default function FiFunding() {
     const downloadFiles = (urlGlob) => {
         // url = process.env.REACT_APP_DOCUMENT_PATH + url;
 
-        console.log(urlGlob,urlGlob.split("/")[1].split(".").splice(-2).join("."))
+        // console.log(urlGlob,urlGlob.split("/")[1].split(".").splice(-2).join("."))
         urlGlob=urlGlob.replaceAll("\\","/")
         // url=url.replaceAll("","\\\\")
 
@@ -75,7 +75,7 @@ export default function FiFunding() {
                 const link = document.createElement('a');
                 link.href = url;
                 console.log(urlGlob.split("/")[1].split(".").splice(-2).join("."))
-                link.setAttribute('download',urlGlob.split("/")[1].split(".").splice(-2).join(".")); // Modify filename as needed
+                link.setAttribute('download',urlGlob.split("/")[1].split(".").splice(0).join(".")); // Modify filename as needed
                 // Append the link to the body
                 document.body.appendChild(link);
                 // Click the link to initiate the download
@@ -214,7 +214,7 @@ export default function FiFunding() {
                                             </IconButton>
                                         </>
                                     }>
-                                     {data?.split("/")[1]?.split(".")?.splice(-2)?.join(".")}
+                                     {data?.split("/")[1]?.split(".")?.splice(0)?.join(".")}
                                 </Alert>
                             </Stack>
                         </ListItem>
@@ -223,7 +223,7 @@ export default function FiFunding() {
                 <Grid item xs={6}>
                     <h4>Previously Uploaded Customer Invoice Files Files</h4>
                     {oldCustomerInvoices.map((data, index) => {
-                        // console.log(data,"-<Original, Copy->",data?.split("/")[1]?.split(".")?.splice(-2)?.join("."))
+                        console.log(data,"-<Original, Copy->",data?.split("/")[1]?.split(".")?.splice(0)?.join("."))
                         return (
                         <ListItem key={index}  >
 
@@ -240,7 +240,7 @@ export default function FiFunding() {
                                             </IconButton>
                                         </>
                                     }>
-                                    {data?.split("/")[1]?.split(".")?.splice(-2)?.join(".")
+                                    {data?.split("/")[1]?.split(".")?.splice(0)?.join(".")
                                    
                                     }
                                 </Alert>
