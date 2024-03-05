@@ -211,7 +211,7 @@ export default function FiFunding() {
                                             </IconButton>
                                         </>
                                     }>
-                                     {data?.split("\\")[1]?.split(".")?.splice(-2)?.join(".")}
+                                     {data}
                                 </Alert>
                             </Stack>
                         </ListItem>
@@ -235,7 +235,7 @@ export default function FiFunding() {
                                             </IconButton>
                                         </>
                                     }>
-                                    {data?.split("\\")[1]?.split(".")?.splice(-2)?.join(".")}
+                                    {data}
                                 </Alert>
                             </Stack>
                         </ListItem>
