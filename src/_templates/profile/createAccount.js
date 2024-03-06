@@ -57,6 +57,18 @@ export default function CreateAccount() {
     }, [])
 
     const createUser = () => {
+
+        if(fname==""){
+            alert("Please enter first name")
+        }
+
+        if(lname==""){
+            alert("Please enter last name")
+        }
+
+        if(uname==""){
+            alert("Please enter User name")
+        }
         const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         if(!email.match(emailRegex)){
             alert("Enter Valid Email")
