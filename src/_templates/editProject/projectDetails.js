@@ -1,5 +1,5 @@
 import { Visibility, VisibilityOff } from '@mui/icons-material'
-import { Avatar, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, IconButton, InputAdornment, List, ListItemButton, OutlinedInput, TextField, Typography } from '@mui/material'
+import { Autocomplete, Avatar, Box, Button, Chip, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, IconButton, InputAdornment, List, ListItem, ListItemAvatar, ListItemButton, ListItemText, OutlinedInput, TextField, Typography } from '@mui/material'
 import React, { useEffect } from 'react'
 import PersonSearchTwoToneIcon from '@mui/icons-material/PersonSearchTwoTone';
 import AddBoxTwoToneIcon from '@mui/icons-material/AddBoxTwoTone';
@@ -73,6 +73,31 @@ export default function ProjectDetails() {
   const handleCloseProjectManager = () => {
     setOpenProjectManager(false);
   };
+
+  const [allManagers, setAllmanagers] = React.useState([])
+
+  useEffect(() => {
+    let tempManagers = []
+    backend.get('api/users/').then(res => {
+
+      tempManagers = res.data.response.map(data => { return data })
+      console.log(tempManagers)
+      setAllmanagers(tempManagers)
+
+    }).catch(err => {
+
+    })
+
+  }, [])
+
+  const handleManagerSelect = (string) => {
+    const arr = managers.filter((t) => {
+      return t._id == string._id
+    })
+
+    if (arr.length == 0)
+      setManagers([...managers, string])
+  }
   return (
     <div>
       <Grid container spacing={2} style={{ marginBottom: "10px" }}>
@@ -102,21 +127,41 @@ export default function ProjectDetails() {
 
       <Grid container spacing={2} style={{ marginBottom: "10px" }}>
         <Grid item xs={12}>
-          <OutlinedInput size='small' placeholder="UIH Project Managers" fullWidth color='success'
+        <Autocomplete
+            clearIcon={false}
+            options={allManagers}
+            getOptionLabel={(options) => options.fname}
+            size='small'
+            renderOption={(props, option) => {
 
-            readOnly
-            value={managers.map((data)=>data.fname+" "+data.lname).toString()}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
+              return (
+                <Box  {...props}>
+                  <ListItem>
+                    <ListItemAvatar>
+                      <Avatar  sx={{ width: 30, height: 30 }} alt={option.fname} src={process.env.REACT_APP_DOCUMENT_PATH + option.image} />
+                    </ListItemAvatar>
 
-                  edge="end"
-                  onClick={handleClickOpenProjectManager}
-                >
-                  <PersonSearchTwoToneIcon />
-                </IconButton>
-              </InputAdornment>
+                    <ListItemText primary={option.fname+" "+option.lname}  secondary={option.email}  />
+                  </ListItem>
+                </Box>
+              )
+            }}
+            value={managers}
+            onChange={(event, newValue) => {
+              setManagers(newValue)
+              console.log(newValue);
+            }}
+            onInputChange={(e, newValue) => {
+              console.log(newValue);
+            }}
+            freeSolo
+            multiple
+            renderTags={(value, props) =>
+              value.map((chip, index) => (
+                <Chip label={chip.fname +" "+chip.lname} color='info' {...props({ index })} avatar={<Avatar alt={chip.fname} src={process.env.REACT_APP_DOCUMENT_PATH + chip.image} />} />
+              ))
             }
+            renderInput={(params) => <TextField label="Select managers" {...params} />}
           />
         </Grid>
 

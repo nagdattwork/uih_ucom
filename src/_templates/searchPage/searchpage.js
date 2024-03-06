@@ -104,7 +104,7 @@ size='small'
         </Grid>
 
         <Grid item xs={3}>
-          <OutlinedInput id="outlined-basic" variant="outlined" fullWidth placeholder='Status' 
+          <OutlinedInput id="outlined-basic" variant="outlined" fullWidth placeholder='Current Stage' 
           value={status} onChange={(e)=>{setStatus(e.target.value)}}
           size='small' color="success" />
         </Grid>

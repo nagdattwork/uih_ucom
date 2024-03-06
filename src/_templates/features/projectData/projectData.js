@@ -4,6 +4,7 @@ const initialState = {
   projectDetails:{},
   customerDetails:{},
   documents:{},
+  documentsDetails:{},
   system:{},
   fiFunding:{},
   fiFundingDocuments:{},
@@ -29,6 +30,15 @@ export const projectDataSlice = createSlice({
       if(action.payload?.documents)
       state.documents=action.payload.documents
 
+      
+      if(action.payload?.documentsDetails)
+      {
+        // console.log(action.payload.documentsDetails)
+        
+        state.documentsDetails=action.payload.documentsDetails
+      
+      }
+      
       if(action.payload?.system)
       state.system=action.payload.system
 
@@ -48,6 +58,7 @@ export const projectDataSlice = createSlice({
       state.projectDetails={}
       state.customerDetails={}
       state.documents={}
+      state.documentsDetails={}
       state.system= {}
       state.fiFunding={}
       state.projectId=""

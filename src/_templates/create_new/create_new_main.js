@@ -108,7 +108,8 @@ export default function CreateNewMain() {
     const systemData = projectData.system
     const fiFundingData=projectData.fiFunding
     const fiFundingDocs=projectData.fiFundingDocuments
-
+    const documentsDetailsData = projectData.documentsDetails
+    console.log(documentsDetailsData)
     
     backend.post("api/projects/add", {
       project_title: {
@@ -134,7 +135,13 @@ export default function CreateNewMain() {
         pdd_document:documentsData?.pdd_document?.map(data=>data.uploaded_path).toString(),
         draft_agreement:documentsData?.draft_agreement?.map(data=>data.uploaded_path).toString(),
         signed_agreement:documentsData?.signed_agreement?.map(data=>data.uploaded_path).toString(),
-        others:documentsData?.others?.map(data=>data.uploaded_path).toString()
+        others:documentsData?.others?.map(data=>data.uploaded_path).toString(),
+        pdd_details: documentsDetailsData?.pdd_details,
+        da_ag_type: documentsDetailsData?.da_ag_type,
+        da_ag_owner: documentsDetailsData?.da_ag_owner,
+        sa_details: documentsDetailsData?.sa_details,
+        other_details: documentsDetailsData?.other_details,
+
       },
       system: systemData,
       owner:userData.user._id,

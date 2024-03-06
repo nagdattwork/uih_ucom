@@ -6,6 +6,8 @@ const initialState = {
   documents:{},
   prevDocuments:{},
   system:{},
+  documentsDetails:{},
+
   fiFunding:{},
   fiFundingDocuments:{},
   projectId:""
@@ -27,7 +29,13 @@ export const editDataSlice = createSlice({
 
       if(action.payload?.documents)
       state.documents=action.payload.documents
-
+      if(action.payload?.documentsDetails)
+      {
+        // console.log(action.payload.documentsDetails)
+        
+        state.documentsDetails=action.payload.documentsDetails
+      
+      }
       
       if(action.payload?.prevDocuments)
       state.prevDocuments=action.payload.prevDocuments
@@ -56,6 +64,7 @@ export const editDataSlice = createSlice({
 
       
       state.prevDocuments={}
+      state.documentsDetails={}
 
       state.system={}
 

@@ -146,6 +146,7 @@ export default function EditProjectMain(props) {
     const systemData = projectData.system
     const fiFundingData = projectData.fiFunding
     const fiFundingDocs = projectData.fiFundingDocuments
+    const documentsDetailsData = projectData.documentsDetails
 
 
     let approvalfile = fiFundingData?.fi_funding_status?.fi_funding_uih_funding_bu_aprroval
@@ -229,7 +230,13 @@ export default function EditProjectMain(props) {
         pdd_document: pdd_docs===undefined?"":pdd_docs,
         draft_agreement: da_docs===undefined?"":da_docs,
         signed_agreement:sa_docs===undefined?"":sa_docs,
-        others:others===undefined?"":others
+        others:others===undefined?"":others,
+        pdd_details: documentsDetailsData?.pdd_details,
+        da_ag_type: documentsDetailsData?.da_ag_type,
+        da_ag_owner: documentsDetailsData?.da_ag_owner,
+        sa_details: documentsDetailsData?.sa_details,
+        other_details: documentsDetailsData?.other_details,
+
       },
       system: systemData,
       fi_funding: {

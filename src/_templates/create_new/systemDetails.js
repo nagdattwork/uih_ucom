@@ -242,6 +242,8 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   //   padding: theme.spacing(1),
   // },
 }));
+
+
 const SystemsSelector = (props) => {
   const handleSystemsSelect = (data) => {
     const arr=props.selectedSystems.filter((t)=>{
@@ -252,6 +254,8 @@ const SystemsSelector = (props) => {
   }
 
   const [allsystems, setAllSystems] = React.useState([])
+  const [tempAllSystems, setTempAllSystems] = React.useState([])
+  const [search,setSearch] = React.useState("")
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -271,12 +275,17 @@ const SystemsSelector = (props) => {
 
   }, [])
 
+  useEffect(()=>{
+    setTempAllSystems(allsystems?.filter(row => row.systems_bu.toLowerCase().includes(search.toLowerCase())))
+
+  },[search])
   const loadSystem = () => {
     let tempSystems = []
     backend.get('api/projects/systemdetails/').then(res => {
 
       tempSystems = res.data.response.map(data => { return data })
       setAllSystems(tempSystems)
+      setTempAllSystems(tempSystems)
 
     }).catch(err => {
 
@@ -308,11 +317,14 @@ const SystemsSelector = (props) => {
           placeholder='Search'
           size='small'
           fullWidth
+          onChange={(e)=>{
+            setSearch(e.target.value)
+          }}
 
         />
         <List sx={{ maxHeight: 150 }}>
           {
-            allsystems.map((data, index) => {
+            tempAllSystems.map((data, index) => {
               return (
                 <>
                   <ListItemButton key={index} onClick={() => handleSystemsSelect(data)}>
@@ -357,6 +369,8 @@ const IBSelector = (props) => {
   }
 
   const [allIB, setAllIB] = React.useState([])
+  const [tempAllIB, setTempAllIB] = React.useState([])
+  const [search,setSearch] = React.useState("")
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -375,12 +389,18 @@ const IBSelector = (props) => {
 
   }, [])
 
+  useEffect(()=>{
+    setTempAllIB(allIB?.filter(row => row.full_ib_bu.toLowerCase().includes(search.toLowerCase())))
+
+  },[search])
+
   const loadIB = () => {
-    let tempIB = []
+    let tempIBs = []
     backend.get('api/projects/fulliblists/').then(res => {
 
-      tempIB = res.data.response.map(data => { return data })
-      setAllIB(tempIB)
+      tempIBs = res.data.response.map(data => { return data })
+      setAllIB(tempIBs)
+      setTempAllIB(tempIBs)
 
     }).catch(err => {
 
@@ -413,11 +433,14 @@ const IBSelector = (props) => {
           placeholder='Search'
           size='small'
           fullWidth
+          onChange={(e)=>{
+            setSearch(e.target.value)
+          }}
 
         />
         <List sx={{ maxHeight: 150 }}>
           {
-            allIB.map((data, index) => {
+            tempAllIB.map((data, index) => {
               return (
                 <>
                   <ListItemButton key={index} onClick={() => handleIBSelect(data)}>

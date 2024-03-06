@@ -64,6 +64,26 @@ const EditDAFileUpload = () => {
 
 
     },[uploadedFiles,prevDA])
+
+
+    const [details,setDetails] = useState(data?.documentsDetails?.da_ag_type?data?.documentsDetails?.da_ag_type:"")
+    const [detailsOwner,setDetailsOwner] = useState(data?.documentsDetails?.da_ag_owner?data?.documentsDetails?.da_ag_owner:"")
+
+    useEffect(()=>{
+        let documentsData=data.documentsDetails
+        documentsData={...documentsData,
+            ...{
+                da_ag_type:details,
+                da_ag_owner:detailsOwner
+            }
+        }
+        // console.log(documentsData)
+        dispatch(appendEdits({
+            documentsDetails:documentsData
+        }))
+    
+    
+    },[details,detailsOwner])
     useEffect(() => {
        const t=
        files.filter((ele)=>{
@@ -198,11 +218,20 @@ const EditDAFileUpload = () => {
             {/* <input type="file" multiple onChange={handleFileChange} /> */}
            
             <Grid container spacing={2} >
-                <Grid item xs={5}>
-                    <OutlinedInput size='small' placeholder='Agreement Type' fullWidth/>
+            <Grid item xs={5}>
+                    <OutlinedInput size='small' placeholder='Agreement Type'
+                    
+                    value={details}
+                    onChange={(e)=>setDetails(e.target.value)}
+                    fullWidth/>
                 </Grid>
                 <Grid item xs={5}>
-                    <OutlinedInput size='small' placeholder='Document Owner' fullWidth/>
+                    <OutlinedInput size='small' placeholder='Document Owner' 
+                    
+                    
+                    value={detailsOwner}
+                    onChange={(e)=>setDetailsOwner(e.target.value)}
+                    fullWidth/>
                 </Grid>
                 <Grid item>
 

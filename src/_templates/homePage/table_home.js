@@ -12,7 +12,7 @@ import Stack from '@mui/material/Stack';
 import backend from '../../app/baseLink';
 import { useSelector } from 'react-redux';
 import { alpha } from '@mui/material/styles';
-import { DataGrid, gridClasses } from '@mui/x-data-grid';
+import { DataGrid, GridToolbar, gridClasses } from '@mui/x-data-grid';
 import { Avatar, Grid, IconButton } from '@mui/material';
 import ModeEditTwoToneIcon from '@mui/icons-material/ModeEditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
@@ -123,7 +123,7 @@ function CustomDataGrid(props) {
     { field: 'customer_details.institutes', headerName: 'Institutes',valueGetter: (params) => [...params.row.customer_details.institutes.map((data)=>data.institute_name)].toString(),flex:1,  },
     { field: 'project_title.project_duration', headerName: 'Duration',valueGetter: (params) => params.row.project_title.project_duration,flex:0.5,  cellClassName: 'wrap-cell-content'},
     { field: 'project_title.act_start_date', headerName: 'Start Date',valueGetter: (params) => params.row.project_title.act_start_date,flex:0.5,  cellClassName: 'wrap-cell-content'},
-    { field: 'project_title.current_stage', headerName: 'Status',valueGetter: (params) => params.row.project_title.current_stage,flex:0.5,  cellClassName: 'wrap-cell-content'},
+    { field: 'project_title.current_stage', headerName: 'Status',valueGetter: (params) => params.row.project_title.current_stage,flex:0.7,  cellClassName: 'wrap-cell-content'},
    
   ];
   
@@ -174,6 +174,15 @@ const handleRowClick = (params) => {
         headerClassName="header-style"
         pageSizeOptions={[8,16,24]}
         onRowClick={handleRowClick}
+        disableColumnFilter
+        disableColumnSelector
+        disableDensitySelector
+        slots={{ toolbar: GridToolbar }}
+        slotProps={{
+          toolbar: {
+            showQuickFilter: true,
+          },
+        }}
       />
     </div>
   );

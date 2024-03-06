@@ -12,7 +12,7 @@ import Stack from '@mui/material/Stack';
 import backend from '../../app/baseLink';
 import { useSelector } from 'react-redux';
 import { alpha } from '@mui/material/styles';
-import { DataGrid, gridClasses } from '@mui/x-data-grid';
+import { DataGrid, GridToolbar, gridClasses } from '@mui/x-data-grid';
 import { Avatar, Grid, IconButton, ListItem, ListItemAvatar, ListItemText, Tooltip } from '@mui/material';
 import ModeEditTwoToneIcon from '@mui/icons-material/ModeEditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
@@ -166,7 +166,13 @@ if(currentUser.user.userType!=='basic'){
         </Tooltip>
       </div>
     )
-  },flex:1,resizable:true }
+  },flex:1,resizable:true ,
+  valueFormatter: (params) => {
+    return params.value.fname+" "+params.value.lname; 
+  },
+
+
+}
 
   )
 }
@@ -197,7 +203,8 @@ if(true){
        </Tooltip>
       </div>
       )
-    },flex:1,resizable:true }
+    },flex:1,resizable:true
+  }
   
     )
 }
@@ -224,6 +231,12 @@ const handleRowClick = (params) => {
         }
         headerClassName="header-style"
         onRowClick={handleRowClick}
+        slots={{ toolbar: GridToolbar }}
+        slotProps={{
+          toolbar: {
+            showQuickFilter: true,
+          },
+        }}
       />
     </div>
   );

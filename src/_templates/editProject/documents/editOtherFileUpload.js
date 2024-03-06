@@ -64,6 +64,23 @@ const EditOtherFileUpload = () => {
 
 
     }, [uploadedFiles,prevOthers])
+
+    const [details,setDetails] = useState(data?.documentsDetails?.other_details?data?.documentsDetails?.other_details:"")
+
+    useEffect(()=>{
+        let documentsData=data.documentsDetails
+        documentsData={...documentsData,
+            ...{
+                other_details:details,
+            }
+        }
+        // console.log(documentsData)
+        dispatch(appendEdits({
+            documentsDetails:documentsData
+        }))
+    
+    
+    },[details])
     useEffect(() => {
         const t =
             files.filter((ele) => {
@@ -200,8 +217,11 @@ const EditOtherFileUpload = () => {
 
             <Grid container spacing={2} >
                 <Grid item xs={10}>
-                    <OutlinedInput size='small' placeholder='Details' fullWidth />
-                </Grid>
+                <OutlinedInput size='small'
+                    value={details}
+                    onChange={(e) =>setDetails(e.target.value)}
+                    placeholder='Details' fullWidth/>
+                        </Grid>
                 <Grid item>
 
 

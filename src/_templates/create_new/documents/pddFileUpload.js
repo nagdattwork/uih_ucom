@@ -32,6 +32,7 @@ const PDDFileUpload = () => {
     const [loading, setLoading] = useState(false);
     const[visible,setVisible]=useState(false)
     const [uploadedFiles,setUploadedFiles]=useState([])
+
     const dispatch=useDispatch()
    
     useEffect(()=>{
@@ -51,6 +52,22 @@ const PDDFileUpload = () => {
 
 
     },[uploadedFiles])
+    const [details,setDetails] = useState(data?.documentsDetails?.pdd_details?data?.documentsDetails?.pdd_details:"")
+
+    useEffect(()=>{
+        let documentsData=data.documentsDetails
+        documentsData={...documentsData,
+            ...{
+                pdd_details:details
+            }
+        }
+        // console.log(documentsData)
+        dispatch(append({
+            documentsDetails:documentsData
+        }))
+    
+    
+    },[details])
     useEffect(() => {
        const t=
        files.filter((ele)=>{
@@ -141,7 +158,10 @@ const PDDFileUpload = () => {
            
             <Grid container spacing={2} >
                 <Grid item xs={10}>
-                    <OutlinedInput size='small' placeholder='Details' fullWidth/>
+                    <OutlinedInput size='small' placeholder='Details'
+                    value={details}
+                    onChange={(e)=>setDetails(e.target.value)}                     
+                    fullWidth/>
                 </Grid>
                 <Grid item>
 

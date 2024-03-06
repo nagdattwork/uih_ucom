@@ -51,6 +51,24 @@ const SAFileUpload = () => {
 
 
     },[uploadedFiles])
+
+
+    const [details,setDetails] = useState(data?.documentsDetails?.sa_details?data?.documentsDetails?.sa_details:"")
+
+    useEffect(()=>{
+        let documentsData=data.documentsDetails
+        documentsData={...documentsData,
+            ...{
+                sa_details:details,
+            }
+        }
+        // console.log(documentsData)
+        dispatch(append({
+            documentsDetails:documentsData
+        }))
+    
+    
+    },[details])
     useEffect(() => {
        const t=
        files.filter((ele)=>{
@@ -141,7 +159,11 @@ const SAFileUpload = () => {
            
             <Grid container spacing={2} >
                 <Grid item xs={10}>
-                    <OutlinedInput size='small' placeholder='Details' fullWidth/>
+                    <OutlinedInput size='small'
+                    
+                    value={details}
+                    onChange={(e)=>setDetails(e.target.value)}
+                    placeholder='Details' fullWidth/>
                 </Grid>
                 <Grid item>
 

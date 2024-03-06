@@ -1,5 +1,5 @@
 import { Visibility, VisibilityOff } from '@mui/icons-material'
-import { Avatar, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, IconButton, InputAdornment, List, ListItemButton, OutlinedInput, TextField, Typography } from '@mui/material'
+import { Autocomplete, Avatar, Box, Button, Chip, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, IconButton, InputAdornment, List, ListItem, ListItemAvatar, ListItemButton, ListItemText, OutlinedInput, TextField, Typography } from '@mui/material'
 import React, { useEffect } from 'react'
 import PersonSearchTwoToneIcon from '@mui/icons-material/PersonSearchTwoTone';
 import AddBoxTwoToneIcon from '@mui/icons-material/AddBoxTwoTone';
@@ -20,14 +20,14 @@ export default function ProjectDetails() {
   const [duration, setDuration] = React.useState(dataDetails.project_duration)
   const [discription, setDiscription] = React.useState(dataDetails.description)
   const [objectives, setObjectives] = React.useState(dataDetails.objective)
-  const [managers, setManagers] = React.useState(dataDetails?.project_manager?dataDetails?.project_manager:[])
+  const [managers, setManagers] = React.useState(dataDetails?.project_manager ? dataDetails?.project_manager : [])
 
-  const pastRows=dataDetails?.hw_sw_spp
-  const initialRows = pastRows ?JSON.parse(JSON.stringify(pastRows)) : [{ hw_sw_type: '', hw_sw_name: '', product_number: '', quantity: '', license: '' }];
+  const pastRows = dataDetails?.hw_sw_spp
+  const initialRows = pastRows ? JSON.parse(JSON.stringify(pastRows)) : [{ hw_sw_type: '', hw_sw_name: '', product_number: '', quantity: '', license: '' }];
   const [rows, setRows] = React.useState(initialRows);
   const [openProjectManager, setOpenProjectManager] = React.useState(false);
   const handleAddRow = () => {
-    setRows( [...rows, { hw_sw_type: '', hw_sw_name: '', product_number: '', quantity: '', license: '' }]);
+    setRows([...rows, { hw_sw_type: '', hw_sw_name: '', product_number: '', quantity: '', license: '' }]);
   };
 
 
@@ -38,20 +38,20 @@ export default function ProjectDetails() {
     projectDetails = {
       ...projectDetails, ...{
         title,
-        project_duration:duration,
-        description:  discription,
-        project_duration:duration,
-        objective:objectives,
-          hw_sw_spp:rows.map(data=>{return ({...data})}),
+        project_duration: duration,
+        description: discription,
+        project_duration: duration,
+        objective: objectives,
+        hw_sw_spp: rows.map(data => { return ({ ...data }) }),
 
-        project_manager :managers.map(data=>{return data}),
+        project_manager: managers.map(data => { return data }),
       }
     }
     dispatch(append({
       projectDetails: projectDetails
     }))
 
-  }, [title, duration, discription, objectives, managers,rows])
+  }, [title, duration, discription, objectives, managers, rows])
   const handleChange = (index, field, value) => {
     const newRows = [...rows];
     newRows[index][field] = value;
@@ -72,6 +72,31 @@ export default function ProjectDetails() {
   const handleCloseProjectManager = () => {
     setOpenProjectManager(false);
   };
+
+  const [allManagers, setAllmanagers] = React.useState([])
+
+  useEffect(() => {
+    let tempManagers = []
+    backend.get('api/users/').then(res => {
+
+      tempManagers = res.data.response.map(data => { return data })
+      console.log(tempManagers)
+      setAllmanagers(tempManagers)
+
+    }).catch(err => {
+
+    })
+
+  }, [])
+
+  // const handleManagerSelect = (string) => {
+  //   const arr = managers.filter((t) => {
+  //     return t._id == string._id
+  //   })
+
+  //   if (arr.length == 0)
+  //     setManagers([...managers, string])
+  // }
   return (
     <div>
       <Grid container spacing={2} style={{ marginBottom: "10px" }}>
@@ -101,21 +126,43 @@ export default function ProjectDetails() {
 
       <Grid container spacing={2} style={{ marginBottom: "10px" }}>
         <Grid item xs={12}>
-          <OutlinedInput size='small' placeholder="UIH Project Managers" fullWidth color='success'
 
-            readOnly
-            value={managers.map((data)=>data.fname+" "+data.lname).toString()}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
 
-                  edge="end"
-                  onClick={handleClickOpenProjectManager}
-                >
-                  <PersonSearchTwoToneIcon />
-                </IconButton>
-              </InputAdornment>
+        <Autocomplete
+            clearIcon={false}
+            options={allManagers}
+            getOptionLabel={(options) => options.fname}
+            size='small'
+            renderOption={(props, option) => {
+
+              return (
+                <Box  {...props}>
+                  <ListItem>
+                    <ListItemAvatar>
+                      <Avatar  sx={{ width: 30, height: 30 }} alt={option.fname} src={process.env.REACT_APP_DOCUMENT_PATH + option.image} />
+                    </ListItemAvatar>
+
+                    <ListItemText primary={option.fname+" "+option.lname} secondary={option.email}  />
+                  </ListItem>
+                </Box>
+              )
+            }}
+            value={managers}
+            onChange={(event, newValue) => {
+              setManagers(newValue)
+              console.log(newValue);
+            }}
+            onInputChange={(e, newValue) => {
+              console.log(newValue);
+            }}
+            freeSolo
+            multiple
+            renderTags={(value, props) =>
+              value.map((chip, index) => (
+                <Chip label={chip.fname +" "+chip.lname} color='info' {...props({ index })} avatar={<Avatar alt={chip.fname} src={process.env.REACT_APP_DOCUMENT_PATH + chip.image} />} />
+              ))
             }
+            renderInput={(params) => <TextField label="Select managers" {...params} />}
           />
         </Grid>
 
@@ -198,97 +245,102 @@ export default function ProjectDetails() {
         </Button>
       </div>
 
-      <ProjectDetails2/>
-      <ProjectManager handleClose={handleCloseProjectManager} open={openProjectManager} managers={managers} setManagers={setManagers} />
+      <ProjectDetails2 />
+      {/* <ProjectManager handleClose={handleCloseProjectManager} open={openProjectManager} managers={managers} setManagers={setManagers} /> */}
     </div>
   )
 }
 
 
 
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  // '& .MuiDialogContent-root': {
-  //   padding: theme.spacing(2),
-  // },
-  // '& .MuiDialogActions-root': {
-  //   padding: theme.spacing(1),
-  // },
-}));
-const ProjectManager = (props) => {
-  const handleManagerSelect = (string) => {
-    props.setManagers([...props.managers, string])
-  }
+// const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+//   // '& .MuiDialogContent-root': {
+//   //   padding: theme.spacing(2),
+//   // },
+//   // '& .MuiDialogActions-root': {
+//   //   padding: theme.spacing(1),
+//   // },
+// }));
+// const ProjectManager = (props) => {
+//   const handleManagerSelect = (string) => {
+//     const arr = props.managers.filter((t) => {
+//       return t._id == string._id
+//     })
 
-  const [allManagers, setAllmanagers] = React.useState([])
+//     if (arr.length == 0)
+//       props.setManagers([...props.managers, string])
+//   }
 
-  useEffect(()=>{
-    let tempManagers=[]
-    backend.get('api/users/').then(res=>{
-      
-      tempManagers= res.data.response.map(data=>{return data})
-      // console.log(tempManagers)
-      setAllmanagers(tempManagers)
+//   const [allManagers, setAllmanagers] = React.useState([])
 
-    }).catch(err=>{
+//   useEffect(() => {
+//     let tempManagers = []
+//     backend.get('api/users/').then(res => {
 
-    })
-    
-  },[])
-  return (
-    <BootstrapDialog
-      onClose={props.handleClose}
-      aria-labelledby="customized-dialog-title"
-      maxWidth={'md'}
-      fullWidth={true}
-      open={props.open}
-    >
-      <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-        <TextField
-          id="standard-number"
-          label="Search"
-          type="text"
-          color='success'
-          InputLabelProps={{
-            shrink: true,
-          }}
-          variant="standard"
-          fullWidth
-        />
-      </DialogTitle>
-      <IconButton
-        aria-label="close"
-        onClick={props.handleClose}
-        sx={{
-          position: 'absolute',
-          right: 8,
-          top: 8,
-          color: (theme) => theme.palette.grey[500],
-        }}
-      >
-        <CloseIcon />
-      </IconButton>
-      <DialogContent dividers>
-        <List>
-          {
-            allManagers.map((data, index) => {
-              return (
-                <>
-                  <ListItemButton key={index} onClick={() => handleManagerSelect(data)}>
-                  <Avatar sx={{mr:2}} src ={process.env.REACT_APP_LINK+data.image}/> {" "} {data.fname}{" "}{data.lname}
-                  </ListItemButton>
-                 
-                </>
-              )
-            })
-          }
+//       tempManagers = res.data.response.map(data => { return data })
+//       // console.log(tempManagers)
+//       setAllmanagers(tempManagers)
 
-        </List>
-      </DialogContent>
-      <DialogActions>
-        <Button autoFocus onClick={props.handleClose} color='success'>
-          OK
-        </Button>
-      </DialogActions>
-    </BootstrapDialog>
-  )
-}
+//     }).catch(err => {
+
+//     })
+
+//   }, [])
+//   return (
+//     <BootstrapDialog
+//       onClose={props.handleClose}
+//       aria-labelledby="customized-dialog-title"
+//       maxWidth={'md'}
+//       fullWidth={true}
+//       open={props.open}
+//     >
+//       <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
+//         <TextField
+//           id="standard-number"
+//           label="Search"
+//           type="text"
+//           color='success'
+//           InputLabelProps={{
+//             shrink: true,
+//           }}
+//           variant="standard"
+//           fullWidth
+//         />
+//       </DialogTitle>
+//       <IconButton
+//         aria-label="close"
+//         onClick={props.handleClose}
+//         sx={{
+//           position: 'absolute',
+//           right: 8,
+//           top: 8,
+//           color: (theme) => theme.palette.grey[500],
+//         }}
+//       >
+//         <CloseIcon />
+//       </IconButton>
+//       <DialogContent dividers>
+//         <List>
+//           {
+//             allManagers.map((data, index) => {
+//               return (
+//                 <>
+//                   <ListItemButton key={index} onClick={() => handleManagerSelect(data)}>
+//                     <Avatar sx={{ mr: 2 }} src={process.env.REACT_APP_LINK + data.image} /> {" "} {data.fname}{" "}{data.lname}
+//                   </ListItemButton>
+
+//                 </>
+//               )
+//             })
+//           }
+
+//         </List>
+//       </DialogContent>
+//       <DialogActions>
+//         <Button autoFocus onClick={props.handleClose} color='success'>
+//           OK
+//         </Button>
+//       </DialogActions>
+//     </BootstrapDialog>
+//   )
+// }

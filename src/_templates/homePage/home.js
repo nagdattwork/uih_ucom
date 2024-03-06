@@ -71,14 +71,14 @@ export default function Home() {
 
                         {/* <NavigationHome/> */}
                         <Grid container style={{backgroundColor:'#9fa8da'}} spacing={2}>
-                            <Grid item xs={8}  style={{padding:"5px"}} >
+                            <Grid item xs={10}  style={{padding:"5px"}} >
                                 <h4 style={{margin:"0px",marginTop:"8px",marginLeft:"8px"}} >Overview of latest projects</h4>
                             </Grid>
-                            <Grid item xs={2} style={{marginTop:"-8px"}}>
+                            {/* <Grid item xs={2} style={{marginTop:"-8px"}}>
                                 <Button variant='contained' color='success'>  Download</Button>
-                            </Grid>
+                            </Grid> */}
                             <Grid item xs={2} style={{marginTop:"-8px"}}>
-                            <Button  color='success' style={{marginBottom:"8px"}}
+                            <Button  color='success' variant='contained'  style={{marginBottom:"8px"}}
                             onClick={()=>{
                                 history("/search")
                             }}

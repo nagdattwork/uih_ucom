@@ -57,6 +57,22 @@ export default function CreateAccount() {
     }, [])
 
     const createUser = () => {
+        const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if(!email.match(emailRegex)){
+            alert("Enter Valid Email")
+            return
+        }
+        if(password!=cnfpassowrd) {
+            alert("password and confirm password must be the same")
+            return
+        }
+
+        if(password.length<8){
+            alert("password length must be greater than or equal to 8 characters")
+            return
+        }
+
+        
         const formData = new FormData()
         formData.append("fname", fname)
         formData.append("lname", lname)
@@ -75,9 +91,13 @@ export default function CreateAccount() {
 
 
         backend.post("/api/users/add", formData).then((res) => {
-            console.log(res)
-            alert("Account has been created!. Wait until your account verified")
-            history("/")
+            console.log(res.data)
+            if(res.data.message==='UAE')
+            {
+                alert("User already exists")
+            }
+            else{alert("Account has been created!. Wait until your account verified")
+            history("/")}
 
         }).catch((err) => {
             console.log("Something Wrong Happend")
@@ -88,10 +108,10 @@ export default function CreateAccount() {
 
     return (
         <Grid container spacing={2}>
-            <Grid item xs={8} style={{ height: "120vh" }}>
+            <Grid item xs={12} sm={12}  md={12} lg={8} style={{ height: "120vh" }}>
                 <img width={"100%"} height={"100%"} src={createImage} />
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={12} sm={12} md={12} lg={4}>
                 <div>
                     <Grid container spacing={2} padding={2} >
                         <Grid item xs={12} >

@@ -262,7 +262,9 @@ const InstituteSelector = (props) => {
   }
 
   const [allInstitutes, setAllInstitutes] = React.useState([])
+  const [tempAllInstitutes, setTempInstitutes] = React.useState([])
   const [value, setValue] = React.useState(0);
+  const [search,setSearch] = React.useState("");
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -286,10 +288,18 @@ const InstituteSelector = (props) => {
       tempInstitutes = res.data.response.map(data => { return data })
       setAllInstitutes(tempInstitutes)
 
+      setTempInstitutes(tempInstitutes)
+
+
     }).catch(err => {
 
     })
   }
+
+  useEffect(()=>{
+    setTempInstitutes(allInstitutes?.filter(row => row.institute_name.toLowerCase().includes(search.toLowerCase())))
+
+  },[search])
   return (
     <BootstrapDialog
       onClose={props.handleClose}
@@ -317,10 +327,15 @@ const InstituteSelector = (props) => {
             size='small'
             fullWidth
 
+            onChange={(e)=>{
+              setSearch(e.target.value)
+            }}
+
+
           />
-          <List sx={{ maxHeight: 150 }}>
+          <List sx={{ maxHeight: 150,height:"150" }}>
             {
-              allInstitutes.map((data, index) => {
+              tempAllInstitutes.map((data, index) => {
                 return (
                   <>
                     <ListItemButton key={index} onClick={() => handleManagerSelect(data)}>
@@ -366,7 +381,9 @@ const PISelector = (props) => {
   }
 
   const [allPI, setAllPI] = React.useState([])
+  const [tempAllPI, setTempAllPI] = React.useState([])
   const [value, setValue] = React.useState(0);
+  const [search,setSearch] = React.useState("");
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -382,12 +399,19 @@ const PISelector = (props) => {
 
   }, [])
 
+
+  useEffect(()=>{
+    setTempAllPI(allPI?.filter(row => row.pi_name.toLowerCase().includes(search.toLowerCase())))
+
+  },[search])
+
   const loadPI = () => {
     let tempInstitutes = []
     backend.get('api/projects/pidetails/').then(res => {
 
       tempInstitutes = res.data.response.map(data => { return data })
       setAllPI(tempInstitutes)
+      setTempAllPI(tempInstitutes)
 
     }).catch(err => {
 
@@ -419,11 +443,13 @@ const PISelector = (props) => {
             placeholder='Search'
             size='small'
             fullWidth
-
+            onChange={(e)=>{
+              setSearch(e.target.value)
+            }}
           />
           <List sx={{ maxHeight: 150 }}>
             {
-              allPI.map((data, index) => {
+              tempAllPI.map((data, index) => {
                 return (
                   <>
                     <ListItemButton key={index} onClick={() => handlePISelect(data)}>
@@ -469,19 +495,29 @@ const ExistingProjectSelector = (props) => {
   }
 
   const [allProjects, setAllProjects] = React.useState([])
-
+  const [tempAllProjects, setTempAllProjects] = React.useState([])
+  const [search,setSearch] = React.useState("")
   useEffect(() => {
     let tempProjects = []
     backend.get('api/projects/').then(res => {
 
       tempProjects = res.data.response.map(data => { return data })
       setAllProjects(tempProjects)
+      setTempAllProjects(tempProjects)
 
     }).catch(err => {
 
     })
 
   }, [])
+
+
+  
+  useEffect(()=>{
+    setTempAllProjects(allProjects?.filter(row => row.project_title.title.toLowerCase().includes(search.toLowerCase())))
+
+  },[search])
+
   return (
     <BootstrapDialog
       onClose={props.handleClose}
@@ -501,24 +537,17 @@ const ExistingProjectSelector = (props) => {
           }}
           variant="standard"
           fullWidth
+
+          onChange={(e)=>{
+            setSearch(e.target.value)
+          }}
         />
       </DialogTitle>
-      <IconButton
-        aria-label="close"
-        onClick={props.handleClose}
-        sx={{
-          position: 'absolute',
-          right: 8,
-          top: 8,
-          color: (theme) => theme.palette.grey[500],
-        }}
-      >
-        <CloseIcon />
-      </IconButton>
+      
       <DialogContent dividers>
-        <List>
+        <List sx={{ maxHeight: 250 }}>
           {
-            allProjects.map((data, index) => {
+            tempAllProjects.map((data, index) => {
               return (
                 <>
                   <ListItemButton key={index} onClick={() => handleProjectSelect({ id: data._id, title: data.project_title.title })}>
