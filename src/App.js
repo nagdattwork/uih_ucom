@@ -99,7 +99,7 @@ function App() {
             ) : (
               <BrowserRouter>
                 <Routes>
-                  <Route index element={<Login setLogin={setLogin} />} />
+                  <Route index element={<Login setLogin={setLogin} />} path='/' />
                   <Route path='createaccount' element={<CreateAccount />} />
                 </Routes>
               </BrowserRouter>
