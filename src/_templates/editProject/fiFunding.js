@@ -1,4 +1,4 @@
-import { Alert, Autocomplete, Button, Collapse, Grid, IconButton, List, ListItem, ListItemSecondaryAction, ListItemText, OutlinedInput, Paper, Stack, TextField, Typography, backdropClasses } from '@mui/material'
+import { Alert, Autocomplete, Backdrop, Button, CircularProgress, Collapse, Grid, IconButton, List, ListItem, ListItemSecondaryAction, ListItemText, OutlinedInput, Paper, Stack, TextField, Typography, backdropClasses } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import Switch from '@mui/material/Switch';
 import { useDispatch, useSelector } from 'react-redux';
@@ -66,6 +66,8 @@ export default function FiFunding() {
         // window.open(url, "_self")
 
         try {
+
+            setOpenDrop(true)
             backend.post('/download', { url:urlGlob }, {
                 responseType: 'blob'
             }).then((response) => {
@@ -82,13 +84,17 @@ export default function FiFunding() {
                 link.click();
                 // Clean up
                 link.parentNode.removeChild(link);
+                setOpenDrop(false)
 
+            }).catch(error => {
+                setOpenDrop(false)
             })
 
 
         } catch (error) {
             console.error('Error downloading file:', error);
         }
+       
     }
     const handleDeleteApprovalFile = async (filename, indexToDelete) => {
         if (!filename) alert("file not uploaded")
@@ -117,7 +123,7 @@ export default function FiFunding() {
         }
 
     };
-
+    const [openDrop,setOpenDrop] = useState(false)
     return (
         <div>
             <Grid container spacing={2} mt={2} >
@@ -249,7 +255,12 @@ export default function FiFunding() {
                     )})}
                 </Grid>
 
-
+                <Backdrop
+  sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+  open={openDrop}
+>
+  <CircularProgress color="inherit" />
+</Backdrop>
 
             </Grid>
         </div>

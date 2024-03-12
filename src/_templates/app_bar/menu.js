@@ -85,6 +85,11 @@ export default function BasicMenu(props) {
           </ListItemIcon>
         <ListItemText primary={user.user.fname+" "+user.user.lname}
         
+        secondary={
+          user.user.userType!=="basic" &&(
+            user.user.userType +" user"
+          )
+        }
        
         />
         
@@ -94,7 +99,7 @@ export default function BasicMenu(props) {
 <Divider/>
       <Link to='/profile' 
         component="button"
-        style={{textDecoration:'none',color:'black'}}
+        style={{textDecoration:'none',color: props.mode !== true ?"black":"white" }}
       >
       <MenuItem  onClick={handleClose}>
       <ListItemIcon>

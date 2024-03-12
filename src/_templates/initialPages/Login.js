@@ -13,6 +13,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import {  useDispatch } from 'react-redux'
 import { login } from '../features/userCred/userLogin'
 import backgroundImage from '../../static/homePageImage.jpg'
+import uihVideo from './../../static/uih.mp4'
 
 import backend from '../../app/baseLink'
 import { BrowserRouter, Route } from 'react-router-dom';
@@ -80,15 +81,12 @@ export default function Login(props) {
           xs={false}
           sm={4}
           md={8}
-          sx={{
-            backgroundImage: `url(${backgroundImage})`,
-            backgroundRepeat: 'no-repeat',
-            backgroundColor: (t) =>
-              t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
-        />
+         
+        >
+            <video  style={{objectFit: 'cover',width:"100%",height:"100vh"}} controls={false} src={uihVideo} type="video/mp4"  muted loop autoPlay playsInline></video>
+
+
+        </Grid>
         <Grid item xs={12} sm={8} md={4}  elevation={6} square>
           <Box
             sx={{

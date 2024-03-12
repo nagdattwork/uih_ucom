@@ -16,6 +16,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import createImage from '../../static/main_tech.jpg'
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
+import uihVideo from './../../static/uih.mp4'
 
 export default function CreateAccount() {
 
@@ -124,7 +125,9 @@ export default function CreateAccount() {
     return (
         <Grid container spacing={2}>
             <Grid item xs={12} sm={12}  md={12} lg={8} style={{ height: "120vh" }}>
-                <img width={"100%"} height={"100%"} src={createImage} />
+                {/* <img width={"100%"} height={"100%"} src={createImage} /> */}
+                <video  style={{objectFit: 'cover',width:"100%",height:"100vh"}} controls={false} src={uihVideo} type="video/mp4"  muted loop autoPlay playsInline></video>
+
             </Grid>
             <Grid item xs={12} sm={12} md={12} lg={4}>
                 <div>

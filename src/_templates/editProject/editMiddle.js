@@ -33,7 +33,9 @@ export default function EditMiddle() {
         da_ag_owner: editData.documents?.da_ag_owner,
         sa_details: editData.documents?.sa_details,
         other_details: editData.documents?.other_details,
-          }
+          },
+          outcomes:editData.outcomes
+          
           
          
         }))

@@ -20,6 +20,8 @@ import { Outlet, Link, useLocation } from "react-router-dom";
 import { createTheme, makeStyles } from '@mui/material';
 import { ThemeProvider } from '@emotion/react';
 import { useSelector } from 'react-redux';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
 
 const drawerWidth = 240;
 
@@ -54,6 +56,7 @@ function AppBarMain(props) {
   ])
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
+
   const [selected,setSelected]=React.useState(-1)
   const user=useSelector(state=>state.login)
   const handleDrawerToggle = () => {
@@ -152,6 +155,10 @@ function AppBarMain(props) {
           >
             <MenuIcon />
           </IconButton>
+
+          <IconButton sx={{ ml: 1 }} onClick={()=>{props.setMode(!props.mode);}} color="inherit">
+        {props.mode === true ? <Brightness7Icon /> : <Brightness4Icon />}
+      </IconButton>
           <Typography
             variant="h6"
             component="div"
@@ -181,7 +188,7 @@ function AppBarMain(props) {
               onClick={() =>{
                 setSelected(index)
                 handleButtonClick(item.title)}}
-              variant={selected===index?'contained':"outlined"}
+              variant={selected===index?'contained':"text"}
               color={selected===index?'info':'success'}
               
               >
@@ -192,7 +199,7 @@ function AppBarMain(props) {
           </Box>
 </ThemeProvider>
          
-          <BasicMenu setLogin={props.setLogin}/>
+          <BasicMenu setLogin={props.setLogin} mode = {props.mode}  />
         </Toolbar>
       </AppBar>
       <nav>

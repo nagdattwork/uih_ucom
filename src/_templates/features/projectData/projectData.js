@@ -8,7 +8,8 @@ const initialState = {
   system:{},
   fiFunding:{},
   fiFundingDocuments:{},
-  projectId:""
+  projectId:"",
+  outcomes:{},
 }
 
 
@@ -49,7 +50,8 @@ export const projectDataSlice = createSlice({
 
       if(action.payload?.fiFunding)
       state.fiFunding=action.payload.fiFunding
-
+      if(action.payload?.outcomes)
+      state.outcomes=action.payload.outcomes
 
     
     },
@@ -62,6 +64,7 @@ export const projectDataSlice = createSlice({
       state.system= {}
       state.fiFunding={}
       state.projectId=""
+      state.outcomes={}
 
      
 

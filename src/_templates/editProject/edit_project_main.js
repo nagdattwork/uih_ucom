@@ -26,6 +26,7 @@ import { useLocation } from 'react-router';
 import editData, { appendEdits } from '../features/projectData/editData';
 import { useNavigate } from 'react-router-dom';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Outcomes from './outcomes';
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -147,6 +148,7 @@ export default function EditProjectMain(props) {
     const fiFundingData = projectData.fiFunding
     const fiFundingDocs = projectData.fiFundingDocuments
     const documentsDetailsData = projectData.documentsDetails
+    const outcomes=projectData.outcomes
 
 
     let approvalfile = fiFundingData?.fi_funding_status?.fi_funding_uih_funding_bu_aprroval
@@ -175,7 +177,6 @@ export default function EditProjectMain(props) {
     let pdd_docs = prevData?.pdd_document
     pdd_docs += prevData?.pdd_document === "" ? "" : ","
     if(pdd_docs===undefined) pdd_docs=""
-
     if (documentsData?.pdd_document?.map(data => data.uploaded_path).toString() !== "" && documentsData?.pdd_document?.map(data => data.uploaded_path).toString() != undefined)
       pdd_docs = pdd_docs + documentsData?.pdd_document?.map(data => data.uploaded_path).toString()
 
@@ -183,14 +184,12 @@ export default function EditProjectMain(props) {
     let da_docs = prevData?.draft_agreement
     da_docs += prevData?.draft_agreement === "" ? "" : ","
     if(da_docs===undefined) da_docs=""
-
     if (documentsData?.draft_agreement?.map(data => data.uploaded_path).toString() !== "" && documentsData?.draft_agreement?.map(data => data.uploaded_path).toString() != undefined)
       da_docs = da_docs + documentsData?.draft_agreement?.map(data => data.uploaded_path).toString()
     
       let sa_docs = prevData?.signed_agreement
       sa_docs += prevData?.signed_agreement === "" ? "" : ","
       if(sa_docs===undefined) sa_docs=""
-
       if (documentsData?.signed_agreement?.map(data => data.uploaded_path).toString() !== "" && documentsData?.signed_agreement?.map(data => data.uploaded_path).toString() != undefined)
       sa_docs = sa_docs + documentsData?.signed_agreement?.map(data => data.uploaded_path).toString()
 
@@ -198,11 +197,39 @@ export default function EditProjectMain(props) {
       let others = prevData?.others
       others += prevData?.others === "" ? "" : ","
       if(others===undefined) others=""
-
       if (documentsData?.others?.map(data => data.uploaded_path).toString() !== "" && documentsData?.others?.map(data => data.uploaded_path).toString() != undefined)
       others = others + documentsData?.others?.map(data => data.uploaded_path).toString()
       
 
+      let abstracts = outcomes?.abstracts_docs
+      abstracts += outcomes?.abstracts_docs === "" ? "" : ","
+      if(abstracts===undefined || abstracts==="undefined" ) abstracts=""
+      if ( outcomes?.current_abs_docs?.map(data => data.uploaded_path).toString() !== "" && outcomes?.current_abs_docs?.map(data => data.uploaded_path).toString() != undefined)
+      abstracts = abstracts + outcomes?.current_abs_docs?.map(data => data.uploaded_path).toString()
+      
+
+      let articles = outcomes?.articles_docs
+      articles += outcomes?.abstracts_docs === "" ? "" : ","
+      if(articles===undefined || articles==="undefined" ) articles=""
+      if ( outcomes?.current_art_docs?.map(data => data.uploaded_path).toString() !== "" && outcomes?.current_art_docs?.map(data => data.uploaded_path).toString() != undefined)
+      articles = articles + outcomes?.current_art_docs?.map(data => data.uploaded_path).toString()
+      
+
+      let milstones = outcomes?.milstones_docs
+      milstones += outcomes?.milstones_docs === "" ? "" : ","
+      if(milstones===undefined || milstones==="undefined" ) milstones=""
+      if ( outcomes?.current_mil_docs?.map(data => data.uploaded_path).toString() !== "" && outcomes?.current_mil_docs?.map(data => data.uploaded_path).toString() != undefined)
+      milstones = milstones + outcomes?.current_mil_docs?.map(data => data.uploaded_path).toString()
+      
+
+      let patents = outcomes?.patents_docs
+      patents += outcomes?.patents_docs === "" ? "" : ","
+      if(patents===undefined || patents==="undefined" ) patents=""
+      if ( outcomes?.current_pet_docs?.map(data => data.uploaded_path).toString() !== "" && outcomes?.current_pet_docs?.map(data => data.uploaded_path).toString() != undefined)
+      patents = patents + outcomes?.current_pet_docs?.map(data => data.uploaded_path).toString()
+      
+    console.log("patents",patents)
+    console.log("mil",milstones)
 
     backend.post("api/projects/update", {
       project_title: {
@@ -248,6 +275,16 @@ export default function EditProjectMain(props) {
           fi_funding_uih_funding_bu_aprroval: approvalfile,
           fi_funding_customer_invoice: cifile
         }
+      },
+      outcomes:{
+        milstones:outcomes?.milstones,
+        patents:outcomes?.patents,
+        articles:outcomes?.articles,
+        abstracts:outcomes?.abstracts,
+        abstracts_docs:abstracts,
+        articles_docs:articles,
+        milstones_docs:milstones,
+        patents_docs:patents
       },
       updated_by:user?.user?._id,
 
@@ -308,6 +345,7 @@ export default function EditProjectMain(props) {
         <Tab label="Approvals" {...a11yProps(5)} />
         <Tab label="Outcomes" {...a11yProps(6)} />
          */}
+          <Tab label="Outcomes" {...a11yProps(4)} />
           <Tab label="Documents" {...a11yProps(7)} />
         </Tabs>
         <TabPanel value={value} index={0}>
@@ -323,8 +361,11 @@ export default function EditProjectMain(props) {
         <TabPanel value={value} index={3}>
           <FiFunding />
         </TabPanel>
-
         <TabPanel value={value} index={4}>
+          <Outcomes />
+        </TabPanel>
+
+        <TabPanel value={value} index={5}>
           <DocumentsDetails />
         </TabPanel>
 

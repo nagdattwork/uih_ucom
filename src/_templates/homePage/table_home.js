@@ -71,7 +71,7 @@ export default function TableHome() {
 const ODD_OPACITY = 0.2;
 const StripedDataGrid = styled(DataGrid)(({ theme }) => ({
   [`& .${gridClasses.row}.even`]: {
-    backgroundColor: theme.palette.grey[200],
+    backgroundColor:  theme.palette.mode === 'dark' ?'#1a237e' : '#e8eaf6',
     '&:hover, &.Mui-hovered': {
       backgroundColor: alpha(theme.palette.primary.main, ODD_OPACITY),
       cursor:"pointer",
@@ -172,7 +172,14 @@ const handleRowClick = (params) => {
           params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
         }
         headerClassName="header-style"
-        pageSizeOptions={[8,16,24]}
+        pageSizeOptions={[8]}
+        initialState={{
+          pagination: {
+            paginationModel: {
+              pageSize: 8,
+            },
+          },
+        }}
         onRowClick={handleRowClick}
         disableColumnFilter
         disableColumnSelector

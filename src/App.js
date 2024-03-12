@@ -6,10 +6,10 @@ import SearchPage from './_templates/searchPage/searchpage';
 import TemplateLC from './_templates/template_l_and_c/templateLC';
 import AppBarMain from './_templates/app_bar/app_bar';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { login as loginRedux}  from './_templates/features/userCred/userLogin';
-import { Box, CircularProgress } from '@mui/material';
+import { login as loginRedux } from './_templates/features/userCred/userLogin';
+import { Box, Button, CircularProgress } from '@mui/material';
 
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import EditProjectMain from './_templates/editProject/edit_project_main';
@@ -20,87 +20,96 @@ import CreateAccount from './_templates/profile/createAccount';
 import Account from './_templates/profile/account';
 
 // Define a custom theme
-const theme = createTheme({
-  palette: {
-    
-    success: {
-      main: '#3f51b5', // Change this to your desired primary color
-    },
-    primary: {
-      main: '#3f51b5', // Change this to your desired primary color
-      light:"#9fa8da"
-    },
-    info:{
-      main:"#00695c"
-    }
-  },
-});
-function App() {
-  const [login,setLogin]=useState(false)
-  const [loading,setLoading]=useState(true)
-  const dispatch=useDispatch()
 
-  useEffect(()=>{
+function App() {
+
+
+
+
+  const [login, setLogin] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const dispatch = useDispatch()
+  const [mode,setMode] = useState(false)
+  const theme = useMemo(
+    () => createTheme({
+      palette: {
+
+        mode: mode?"dark":"light",
+
+        success: {
+          main: '#3f51b5', // Change this to your desired primary color
+        },
+        primary: {
+          main: '#3f51b5', // Change this to your desired primary color
+          light: "#9fa8da"
+        },
+        info: {
+          main: "#00695c"
+        }
+      },
+    })
+  )
+  useEffect(() => {
 
     // localStorage.removeItem('user')
-    if(localStorage.getItem('user'))
-    {
-    const temp=JSON.parse(localStorage.getItem('user'))
-    // console.log(temp)
-    dispatch(loginRedux({
-      loggedIn:temp.loggedIn,
-        user:temp.user,
-        token:temp.token
-    }))
-    setLogin(true)
-    
-  }
-  setLoading(false)
-  },[])
-  return (
-   <ThemeProvider theme={theme}
-   
-   style={{
-    backgroundColor : 'green',
-  color : 'white',
-  height : '100%'
-   }}>
-     {loading?(  <Box sx={{ display: 'flex',alignItems: 'center', justifyContent: 'center',height:"100vh" }}>
-      <CircularProgress />
-    </Box>):
-     (<div >
-      
-     {
-       login?(<BrowserRouter>
-         <AppBarMain setLogin={setLogin}/>
-         <Routes>
-          
-             <Route index element={<Home />} />
-             <Route path="createnew" element={<CreateNewMain />} />
-             <Route path="dashboard" element={<Dashboard />} />
-             <Route path="search" element={<SearchPage />} forceRefresh={true} />
-             <Route path="templates" element={<TemplateLC />} />
-             <Route path="editproject" element={<EditMiddle />} />
-             <Route path="filepush" element={<FileUpload />} />
+    if (localStorage.getItem('user')) {
+      const temp = JSON.parse(localStorage.getItem('user'))
+      // console.log(temp)
+      dispatch(loginRedux({
+        loggedIn: temp.loggedIn,
+        user: temp.user,
+        token: temp.token
+      }))
+      setLogin(true)
 
-             <Route path="/profile" element={<Profile />} />
-             <Route path="/accounts" element={<Account />} />
-
-         </Routes>
-       </BrowserRouter>):(
-        <BrowserRouter>
-        <Routes>
-        <Route index element={<Login setLogin={setLogin}/>}/>
-        <Route path='createaccount' element={<CreateAccount/>}/>
-        </Routes>
-        </BrowserRouter>
-       )
-     }
-  
-     </div>)
-     
     }
-   </ThemeProvider>
+    setLoading(false)
+  }, [])
+  return (
+    <ThemeProvider theme={theme}
+
+    >
+      {loading ? (<Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: "100vh" }}>
+        <CircularProgress />
+      </Box>) :
+        (<div >
+
+          {
+            login ? (
+            
+
+<BrowserRouter>
+  <AppBarMain setLogin={setLogin} mode={mode} setMode={setMode} />
+  <Routes>
+
+    <Route index element={<Home />} />
+    <Route path="createnew" element={<CreateNewMain />} />
+    <Route path="dashboard" element={<Dashboard />} />
+    <Route path="search" element={<SearchPage />} forceRefresh={true} />
+    <Route path="templates" element={<TemplateLC />} />
+    <Route path="editproject" element={<EditMiddle />} />
+    <Route path="filepush" element={<FileUpload />} />
+
+    <Route path="/profile" element={<Profile />} />
+    <Route path="/accounts" element={<Account />} />
+
+  </Routes>
+</BrowserRouter>
+
+            ) : (
+              <BrowserRouter>
+                <Routes>
+                  <Route index element={<Login setLogin={setLogin} />} />
+                  <Route path='createaccount' element={<CreateAccount />} />
+                </Routes>
+              </BrowserRouter>
+            )
+          }
+
+        </div>)
+
+      }
+    </ThemeProvider>
   );
 }
 

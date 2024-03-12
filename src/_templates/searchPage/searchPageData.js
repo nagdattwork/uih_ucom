@@ -70,7 +70,7 @@ export default function SearchPageData(props) {
 const ODD_OPACITY = 0.2;
 const StripedDataGrid = styled(DataGrid)(({ theme }) => ({
   [`& .${gridClasses.row}.even`]: {
-    backgroundColor: theme.palette.grey[200],
+    backgroundColor:  theme.palette.mode === 'dark' ?'#1a237e' : '#e8eaf6',
     '&:hover, &.Mui-hovered': {
       backgroundColor: alpha(theme.palette.primary.main, ODD_OPACITY),
       cursor:"pointer",
@@ -181,9 +181,9 @@ if(true){
   columns.push(
     { field: 'Updated By', headerName: 'Updater',renderCell: (params) =>{
       if(!(params.row?.updated_by)){
-        return <>
+        return <div >
         No updater
-        </>
+        </div>
       }
       return(
         <div>
@@ -203,7 +203,11 @@ if(true){
        </Tooltip>
       </div>
       )
-    },flex:1,resizable:true
+    },flex:1,resizable:true,
+    valueFormatter: (params) => {
+      console.log(params.updated_by)
+      return params.row?.updated_by?.fname?params.row?.updated_by?.fname:""; 
+    },
   }
   
     )
@@ -229,12 +233,20 @@ const handleRowClick = (params) => {
         getRowClassName={(params) =>
           params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
         }
-        headerClassName="header-style"
+       
         onRowClick={handleRowClick}
         slots={{ toolbar: GridToolbar }}
         slotProps={{
           toolbar: {
             showQuickFilter: true,
+          },
+        }}
+        pageSizeOptions={[8]}
+        initialState={{
+          pagination: {
+            paginationModel: {
+              pageSize: 8,
+            },
           },
         }}
       />

@@ -237,11 +237,23 @@ export default function ProjectDetails() {
                 <DeleteTwoToneIcon />
               </IconButton>
             </Grid>
+
+            <Grid item xs={1}>
+           {
+            index === rows.length - 1?
+            <Button  onClick={handleAddRow} startIcon={<AddBoxTwoToneIcon />} color='success' variant='contained'>
+              Add
+            </Button> : null
+           }
+            </Grid>
           </Grid>
         ))}
-        <Button style={{ marginTop: "20px" }} onClick={handleAddRow} startIcon={<AddBoxTwoToneIcon />} color='success' variant='contained'>
+         {
+        rows.length === 0?
+        <Button  onClick={handleAddRow} startIcon={<AddBoxTwoToneIcon />} color='success' variant='contained'>
           Add
-        </Button>
+        </Button> : null
+       }
       </div>
 
       <ProjectDetails2/>

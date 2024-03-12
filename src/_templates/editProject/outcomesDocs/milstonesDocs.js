@@ -11,10 +11,11 @@ import VisibilityTwoToneIcon from '@mui/icons-material/VisibilityTwoTone';
 import CloudUploadTwoToneIcon from '@mui/icons-material/CloudUploadTwoTone';
 import VisibilityOffTwoToneIcon from '@mui/icons-material/VisibilityOffTwoTone';
 import { useDispatch, useSelector } from 'react-redux';
+
 import { append } from '../../features/projectData/projectData';
-import { appendEdits } from '../../features/projectData/editData';
-import Download from '@mui/icons-material/Download';
 import backend from '../../../app/baseLink';
+import { appendEdits } from '../../features/projectData/editData';
+import { Download } from '@mui/icons-material';
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
     clipPath: 'inset(50%)',
@@ -27,74 +28,37 @@ const VisuallyHiddenInput = styled('input')({
     width: 1,
 });
 
-const EditPDDFileUpload = () => {
+const MilstonesDocs = () => {
     const data=useSelector(state=>state.editData)
-    const docs=(data.documents)
-    const prevData=data.prevDocuments
-    let temp=(prevData?.pdd_document?.split(","))
+
+    const prevData=data.outcomes
+    let temp=(prevData?.milstones_docs?.split(","))
     temp=temp?.filter((file)=>{return file!="" && file!=undefined && file !='undefined'} )
-    const [prevPdd,setPrevPdd]=useState(temp?temp:[])
-    const [files, setFiles] = useState(docs?.pdd_document?[...docs?.pdd_document]:[]);
+    const [prevMilstone,setPrevMilstone]=useState(temp?temp:[])
+    const [files, setFiles] = useState(prevData?.current_mil_docs?[...prevData?.current_mil_docs]:[]);
     const [loading, setLoading] = useState(false);
     const[visible,setVisible]=useState(false)
     const [uploadedFiles,setUploadedFiles]=useState([])
     const dispatch=useDispatch()
-   
     useEffect(()=>{
-        
-        let documentsData=data.documents
-        documentsData={
-            ...documentsData,
+        let milstonesdocsData=data.outcomes
+        milstonesdocsData={
+            ...milstonesdocsData,
            ... {
-                pdd_document:uploadedFiles.map((data) => {return (data) })
-            }
-        }
-        let preDocumentsData=data.prevDocuments
-        preDocumentsData={
-            ...preDocumentsData,...{
-                pdd_document:prevPdd.toString()
+            milstones_docs:prevMilstone.toString(),
+            current_mil_docs:uploadedFiles.map((data) => {return (data) })
+
             }
         }
 
         
         dispatch(appendEdits({
-            documents:documentsData,
-        }))
-
-        dispatch(appendEdits({
-            prevDocuments:preDocumentsData
-
+            outcomes:milstonesdocsData
         }))
 
 
-    },[uploadedFiles,prevPdd])
-
-
-    const [details,setDetails] = useState(data?.documentsDetails?.pdd_details?data?.documentsDetails?.pdd_details:"")
-
-    useEffect(()=>{
-        let documentsData=data.documentsDetails
-        documentsData={...documentsData,
-            ...{
-                pdd_details:details
-            }
-        }
-        // console.log(documentsData)
-        dispatch(appendEdits({
-            documentsDetails:documentsData
-        }))
-    
-    
-    },[details])
-    useEffect(() => {
-       const t=
-       files.filter((ele)=>{
-        return ele?.uploaded_path
-       })
-       setUploadedFiles(t)
-      
-    }, [files])
-
+    },[uploadedFiles,prevMilstone])
+   
    
     const handleFileChange = (e) => {
 
@@ -169,7 +133,16 @@ const EditPDDFileUpload = () => {
         })
         setFiles(tem)
     }
-    const downloadFiles=(urlGlob)=>{
+    useEffect(() => {
+        const t=
+        files.filter((ele)=>{
+         return ele?.uploaded_path
+        })
+        setUploadedFiles(t)
+       
+     }, [files])
+
+     const downloadFiles=(urlGlob)=>{
         urlGlob=urlGlob.replaceAll("\\","/")
 
         try {
@@ -204,22 +177,19 @@ const EditPDDFileUpload = () => {
         } catch (error) {
             console.error(error);
         }
-        setPrevPdd((prevItems) => prevItems.filter((_, index) => index !== indexT));          
+        setPrevMilstone((prevItems) => prevItems.filter((_, index) => index !== indexT));          
 
 
     }
-
-    
     return (
         <div>
             {/* <input type="file" multiple onChange={handleFileChange} /> */}
            
             <Grid container spacing={2} >
                 <Grid item xs={10}>
-                <OutlinedInput size='small' placeholder='Details'
-                    value={details}
-                    onChange={(e)=>setDetails(e.target.value)}                     
-                    fullWidth/>
+                    <b>
+                        Milstones Documents
+                    </b>
                 </Grid>
                 <Grid item>
 
@@ -249,34 +219,35 @@ const EditPDDFileUpload = () => {
 
 
             </Grid>
-           <Grid container spacing={2} style={{marginTop:"5px"}}>
+           <Grid container spacing={2}padding={2}>
           <Grid item xs={12}>
-          <Collapse in={visible} component={Paper} >
-            <Typography style={{marginLeft:"10px"}}>
+          <Collapse in={visible} component={Paper}>
+          <Typography style={{marginLeft:"10px"}}>
                 <b >Previous Files</b>
             </Typography>
             <List> {
                            
-                            prevPdd.map((file,index)=>{
-                                    console.log(file?.split("/")[1]?.split(".")?.splice(1)?.join("."),file)
-                             return ( 
-                                 <ListItem>
-                                    <ListItemText primary={file?.split("/")[1]?.split(".")?.splice(1)?.join(".")}/>
-                                 <ListItemSecondaryAction>
-                                 <IconButton color='info' onClick={()=>{downloadFiles(file)}}>
-                                        <Download />
-                                    </IconButton>
-                                    <IconButton color='error' onClick={()=>{handleDeletePrevFiles(file,index)}}>
-                                        <DeleteIcon/>
-                                    </IconButton>
-                                    </ListItemSecondaryAction>
-                                 </ListItem>
-                              )
-                            }
-                            )
-                            
-                           } </List>
-            <Typography style={{marginLeft:"10px"}}> <b >Previous Files</b></Typography>
+                           prevMilstone.map((file,index)=>{
+                            return ( 
+                                <ListItem>
+                                   <ListItemText primary={file?.split("/")[1]?.split(".")?.splice(1)?.join(".")}/>
+                                <ListItemSecondaryAction>
+                                <IconButton color='info' onClick={()=>{downloadFiles(file)}}>
+                                       <Download />
+                                   </IconButton>
+                                   <IconButton color='error' onClick={()=>{handleDeletePrevFiles(file,index)}}>
+                                       <DeleteIcon/>
+                                   </IconButton>
+                                   </ListItemSecondaryAction>
+                                </ListItem>
+                             )
+                           }
+                           )
+                           
+                          } </List>
+            <Typography style={{marginLeft:"10px"}}>
+                <b >Current Files</b>
+            </Typography>
            <List>
                 {files.map((file, index) => (
                     <ListItem key={index}>
@@ -302,4 +273,4 @@ const EditPDDFileUpload = () => {
     );
 };
 
-export default EditPDDFileUpload;
+export default MilstonesDocs;

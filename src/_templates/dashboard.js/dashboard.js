@@ -73,7 +73,7 @@ const Dashboard = () => {
         if (res._id !== null)
           dataArray.push({ id: index, value: res.count, label: res._id })
       })
-console.log(dataArray)
+      console.log(dataArray)
       setCompletionDataState({
         series: [{ data: dataArray }]
       })
@@ -143,7 +143,7 @@ console.log(dataArray)
       <Box >
         {
           user.user.userType !== "basic" && (
-            <Alert  severity="success"
+            <Alert severity="success"
               action={
                 <Grid item container>
                   <Grid item xs={'auto'}>
@@ -222,6 +222,29 @@ console.log(dataArray)
                   },
                 ]}
                 height={200}
+              />
+            </Card>
+          </Grid>
+          <Grid item xs={6}>
+            <Card>
+              <CardContent style={{ textAlign: "center" }}>
+              <b>Patents/ Outcomes</b>
+                </CardContent>
+              <BarChart
+                xAxis={[
+                  {
+                    id: 'barCategories',
+                    data: ['IPR', 'Patents Filed', 'Patents Granted','Articles','Abstracts'],
+                    scaleType: 'band',
+                  },
+                ]}
+                series={[
+                  {
+                    data: [2, 5, 3,4,8],
+                  },
+                ]}
+               
+                height={250}
               />
             </Card>
           </Grid>

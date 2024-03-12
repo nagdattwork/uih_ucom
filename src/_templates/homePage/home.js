@@ -70,9 +70,15 @@ export default function Home() {
                         </Grid>
 
                         {/* <NavigationHome/> */}
-                        <Grid container style={{backgroundColor:'#9fa8da'}} spacing={2}>
+                        <Grid container style={{
+                            
+                            backgroundColor:"#5c6bc0"
+                        
+                        }} 
+                        
+                        spacing={2}>
                             <Grid item xs={10}  style={{padding:"5px"}} >
-                                <h4 style={{margin:"0px",marginTop:"8px",marginLeft:"8px"}} >Overview of latest projects</h4>
+                                <h4 style={{margin:"0px",marginTop:"8px",marginLeft:"8px",color:"white"}} >Overview of latest projects</h4>
                             </Grid>
                             {/* <Grid item xs={2} style={{marginTop:"-8px"}}>
                                 <Button variant='contained' color='success'>  Download</Button>
