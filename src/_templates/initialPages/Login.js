@@ -47,8 +47,8 @@ export default function Login(props) {
         username:email,password:pass
       
     }) .then(response =>{
-
-      if (response.data.message=="Login successfull")
+      console.log(response.data);
+      if (response.data.message=="ls")
      { 
       if(!response.data.user.approved){
         alert("Your account is not approved yet")
@@ -65,6 +65,12 @@ export default function Login(props) {
         user:response.data.user,
         token:response.data.token
       }))
+    }else if(response.data.message==='wp'){
+      alert("Wrong password")
+    }
+
+    else if(response.data.message==='nuf'){
+      alert("User not found")
     }
     })
     

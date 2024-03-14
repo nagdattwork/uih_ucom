@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, List, ListItemButton, ListItemIcon, OutlinedInput, Tab, TableHead, Tabs, TextField, Typography } from '@mui/material'
+import { Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, List, ListItemButton, ListItemIcon, OutlinedInput, Snackbar, Tab, TableHead, Tabs, TextField, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import Table from '@mui/material/Table';
@@ -59,7 +59,8 @@ setSelectedIB(tempIB)
 
 //Service Engineers
 const [serviceEngineers,setServiceEngineers]=useState((projectData?.system?.uih_service_engineer?projectData.system?.uih_service_engineer:""))
-
+const [openSnack,setOpenSnack] = useState(false)
+const [snackText,setSnackText] = useState("")
 //Adding values to Redux
 useEffect(()=>{
   let systemDetails=projectData.system
@@ -200,9 +201,25 @@ useEffect(()=>{
        
         
        </Grid>
-      <SystemsSelector open={systemsOpen} handleClose={systemsDialogClose} setSelectedSystems={setSelectedSystems} selectedSystems={selectedSystems} />
-      <IBSelector open={IBOpen} handleClose={IBDialogClose} setSelectedIB={setSelectedIB} selectedIB={selectedIB} />
+       <SystemsSelector open={systemsOpen} handleClose={systemsDialogClose} setSelectedSystems={setSelectedSystems} selectedSystems={selectedSystems}
+      
+      openSnack={openSnack} setOpenSnack={setOpenSnack} snackText={snackText} setSnackText={setSnackText}
+      />
+      <IBSelector open={IBOpen} handleClose={IBDialogClose} setSelectedIB={setSelectedIB} selectedIB={selectedIB} 
+      openSnack={openSnack} setOpenSnack={setOpenSnack} snackText={snackText} setSnackText={setSnackText}
+      />
 
+ 
+<Snackbar open={openSnack} autoHideDuration={6000} onClose={()=>setOpenSnack(false)}>
+  <Alert
+    onClose={()=>setOpenSnack(false)}
+    severity="success"
+    variant="filled"
+    sx={{ width: '100%' }}
+  >
+    {snackText}
+  </Alert>
+</Snackbar>
     </div>
   )
 }
@@ -343,7 +360,10 @@ const SystemsSelector = (props) => {
 
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <AddSystem loadSystem={loadSystem} />
+        <AddSystem loadSystem={loadSystem}
+          openSnack={props.openSnack} setOpenSnack={props.setOpenSnack} snackText={props.snackText} setSnackText={props.setSnackText} 
+        
+        />
       </TabPanel>
 
     </DialogContent>
@@ -459,7 +479,10 @@ const IBSelector = (props) => {
 
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <AddFullIB loadIB={loadIB} />
+        <AddFullIB loadIB={loadIB}
+          openSnack={props.openSnack} setOpenSnack={props.setOpenSnack} snackText={props.snackText} setSnackText={props.setSnackText} 
+        
+        />
       </TabPanel>
 
     </DialogContent>
@@ -498,6 +521,8 @@ const AddSystem = (props) => {
     systems_warranty_status:warranty
     }).then((res) => {
       console.log(res)
+      props.setSnackText("System details added successfully")
+      props.setOpenSnack(true)
       props.loadSystem()
     })
   }
@@ -590,6 +615,8 @@ const AddFullIB = (props) => {
       full_ib_warranty:warranty
     }).then((res) => {
       console.log(res)
+      props.setSnackText("IB details added successfully")
+      props.setOpenSnack(true)
       props.loadIB()
     })
   }

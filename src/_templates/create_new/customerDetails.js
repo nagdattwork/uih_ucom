@@ -1,4 +1,4 @@
-import { Box, Button, ButtonGroup, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, Grid, IconButton, List, ListItemButton, ListItemIcon, OutlinedInput, Paper, Tab, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tabs, TextField, Typography } from '@mui/material'
+import { Alert, Autocomplete, Box, Button, ButtonGroup, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, Grid, IconButton, List, ListItemButton, ListItemIcon, OutlinedInput, Paper, Snackbar, Tab, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tabs, TextField, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import SearchIcon from '@mui/icons-material/Search';
@@ -59,6 +59,10 @@ export default function CustomerDetails() {
   //Existing Projects
   const [selectedProject, setSelectedProject] = useState(projectData?.customerDetails?.existing_projects ? projectData.customerDetails.existing_projects : "")
   const [projectOpen, setProjectOpen] = useState(false)
+
+
+  const [openSnack, setOpenSnack] = useState(false)
+  const [snackText, setSnackText] = useState("")
   const projectDialogClose = () => {
     setProjectOpen(false)
   }
@@ -155,7 +159,7 @@ export default function CustomerDetails() {
                   <TableCell align="left"><b>Designation</b></TableCell>
                   <TableCell align="left"><b>Email</b></TableCell>
                   <TableCell align="left"><b>Phone No.</b></TableCell>
-                  <TableCell align="left"><b>Signatury Rights</b></TableCell>
+                  <TableCell align="left"><b>Signatory Rights</b></TableCell>
                   <TableCell align="left"><b>Top Management</b></TableCell>
                   <TableCell align="left"><b>Action</b></TableCell>
                 </TableRow>
@@ -204,11 +208,24 @@ export default function CustomerDetails() {
         </Grid>
 
       </Grid>
-      <InstituteSelector open={instituteOpen} handleClose={instituteDialogClose} setSelectedInstitutes={setSelectedInstitutes} selectedInstitutes={selectedInstitutes} />
-      <PISelector open={piOpen} handleClose={piDialogClose} setSelectedPI={setSelectedPI} selectedPI={selectedPI} />
+      <InstituteSelector open={instituteOpen} handleClose={instituteDialogClose} setSelectedInstitutes={setSelectedInstitutes} selectedInstitutes={selectedInstitutes} openSnack={openSnack} setOpenSnack={setOpenSnack} snackText={snackText} setSnackText={setSnackText} />
+      <PISelector open={piOpen} handleClose={piDialogClose} setSelectedPI={setSelectedPI} selectedPI={selectedPI}
+        openSnack={openSnack} setOpenSnack={setOpenSnack} snackText={snackText} setSnackText={setSnackText}
+      />
 
 
       <ExistingProjectSelector open={projectOpen} handleClose={projectDialogClose} setSelectedProject={setSelectedProject} selectedProject={selectedProject} />
+
+      <Snackbar open={openSnack} autoHideDuration={6000} onClose={() => setOpenSnack(false)}>
+        <Alert
+          onClose={() => setOpenSnack(false)}
+          severity="success"
+          variant="filled"
+          sx={{ width: '100%' }}
+        >
+          {snackText}
+        </Alert>
+      </Snackbar>
     </div>
   )
 }
@@ -264,7 +281,7 @@ const InstituteSelector = (props) => {
   const [allInstitutes, setAllInstitutes] = React.useState([])
   const [tempAllInstitutes, setTempInstitutes] = React.useState([])
   const [value, setValue] = React.useState(0);
-  const [search,setSearch] = React.useState("");
+  const [search, setSearch] = React.useState("");
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -296,10 +313,10 @@ const InstituteSelector = (props) => {
     })
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     setTempInstitutes(allInstitutes?.filter(row => row.institute_name.toLowerCase().includes(search.toLowerCase())))
 
-  },[search])
+  }, [search])
   return (
     <BootstrapDialog
       onClose={props.handleClose}
@@ -327,13 +344,13 @@ const InstituteSelector = (props) => {
             size='small'
             fullWidth
 
-            onChange={(e)=>{
+            onChange={(e) => {
               setSearch(e.target.value)
             }}
 
 
           />
-          <List sx={{ maxHeight: 150,height:"150" }}>
+          <List sx={{ maxHeight: 150, height: "150" }}>
             {
               tempAllInstitutes.map((data, index) => {
                 return (
@@ -353,7 +370,9 @@ const InstituteSelector = (props) => {
 
         </TabPanel>
         <TabPanel value={value} index={1}>
-          <AddInstitutes loadInstitutes={loadInstitutes} />
+          <AddInstitutes loadInstitutes={loadInstitutes}
+            openSnack={props.openSnack} setOpenSnack={props.setOpenSnack} snackText={props.snackText} setSnackText={props.setSnackText}
+          />
         </TabPanel>
 
       </DialogContent>
@@ -383,7 +402,7 @@ const PISelector = (props) => {
   const [allPI, setAllPI] = React.useState([])
   const [tempAllPI, setTempAllPI] = React.useState([])
   const [value, setValue] = React.useState(0);
-  const [search,setSearch] = React.useState("");
+  const [search, setSearch] = React.useState("");
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -400,10 +419,10 @@ const PISelector = (props) => {
   }, [])
 
 
-  useEffect(()=>{
+  useEffect(() => {
     setTempAllPI(allPI?.filter(row => row.pi_name.toLowerCase().includes(search.toLowerCase())))
 
-  },[search])
+  }, [search])
 
   const loadPI = () => {
     let tempInstitutes = []
@@ -443,7 +462,7 @@ const PISelector = (props) => {
             placeholder='Search'
             size='small'
             fullWidth
-            onChange={(e)=>{
+            onChange={(e) => {
               setSearch(e.target.value)
             }}
           />
@@ -467,7 +486,9 @@ const PISelector = (props) => {
 
         </TabPanel>
         <TabPanel value={value} index={1}>
-          <AddPI loadPI={loadPI} />
+          <AddPI loadPI={loadPI}
+            openSnack={props.openSnack} setOpenSnack={props.setOpenSnack} snackText={props.snackText} setSnackText={props.setSnackText}
+          />
         </TabPanel>
 
       </DialogContent>
@@ -496,7 +517,7 @@ const ExistingProjectSelector = (props) => {
 
   const [allProjects, setAllProjects] = React.useState([])
   const [tempAllProjects, setTempAllProjects] = React.useState([])
-  const [search,setSearch] = React.useState("")
+  const [search, setSearch] = React.useState("")
   useEffect(() => {
     let tempProjects = []
     backend.get('api/projects/').then(res => {
@@ -512,11 +533,11 @@ const ExistingProjectSelector = (props) => {
   }, [])
 
 
-  
-  useEffect(()=>{
+
+  useEffect(() => {
     setTempAllProjects(allProjects?.filter(row => row.project_title.title.toLowerCase().includes(search.toLowerCase())))
 
-  },[search])
+  }, [search])
 
   return (
     <BootstrapDialog
@@ -538,12 +559,12 @@ const ExistingProjectSelector = (props) => {
           variant="standard"
           fullWidth
 
-          onChange={(e)=>{
+          onChange={(e) => {
             setSearch(e.target.value)
           }}
         />
       </DialogTitle>
-      
+
       <DialogContent dividers>
         <List sx={{ maxHeight: 250 }}>
           {
@@ -597,6 +618,8 @@ const AddInstitutes = (props) => {
       institute_phone: phone
     }).then((res) => {
       console.log(res)
+      props.setSnackText("Institute added successfully")
+      props.setOpenSnack(true)
       props.loadInstitutes()
     })
   }
@@ -669,14 +692,17 @@ const AddPI = (props) => {
   const [topManagement, setTopManagement] = useState("")
 
   const uploadPI = () => {
+    console.log(topManagement,topManagement === "YES")
     backend.post("/api/projects/pidetails/add", {
-      pi_name:name,
-    pi_designation:designation,
-    pi_email:email,
-    pi_phone:phoneNO,
-    pi_signatury_rights:signaturyRights==="YES",
-    pi_top_management:topManagement==="YES"
+      pi_name: name,
+      pi_designation: designation,
+      pi_email: email,
+      pi_phone: phoneNO,
+      pi_signatury_rights: signaturyRights === "YES",
+      pi_top_management: topManagement === "YES"
     }).then((res) => {
+      props.setSnackText("PI details added successfully")
+      props.setOpenSnack(true)
       console.log(res)
       props.loadPI()
     })
@@ -718,19 +744,37 @@ const AddPI = (props) => {
         </Grid>
 
         <Grid item xs={6}>
-          <OutlinedInput size='small' style={{ marginBottom: "5px" }}
-            value={signaturyRights}
-            required
-            onChange={(e) => setSignaturyRights(e.target.value)}
-            placeholder='Signatury Rights' fullWidth />
+          <Autocomplete
+            disablePortal
+            id="combo-box-demo"
+            options={["YES", "NO"]}
+            fullWidth
+            size='small'
+            onChange={(event, newValue) => {
+              setSignaturyRights(newValue);
+            }}
+
+            // onInputChange={(e) => setSignaturyRights(e.target.value)}
+            renderInput={(params) => <TextField {...params} label="Signatory Rights" />}
+          />
+
+        
         </Grid>
 
-        <Grid item xs={6}>
-          <OutlinedInput size='small' style={{ marginBottom: "5px" }}
-            value={topManagement}
-            required
-            onChange={(e) => setTopManagement(e.target.value)}
-            placeholder='Top Management' fullWidth />
+        <Grid item xs={6} style={{marginBottom:"10px"}}>
+        <Autocomplete
+            disablePortal
+            id="combo-box-demo"
+            options={["YES", "NO"]}
+            fullWidth
+            size='small'
+            onChange={(event, newValue) => {
+              setTopManagement(newValue);
+            }}
+
+            // onInputChange={(e) => setSignaturyRights(e.target.value)}
+            renderInput={(params) => <TextField {...params} label="Top Management" />}
+          />
         </Grid>
       </Grid>
       <Button variant='contained'
