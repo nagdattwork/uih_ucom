@@ -4,8 +4,8 @@ import React, { useEffect, useState } from 'react'
 import backend from '../../app/baseLink'
 
 export default function TemplateLC() {
-    const [leagalTemp,setLeagalTemp]=useState(["Leagal Template 1","Leagal Template 2","Leagal Template 3","Leagal Template 4","Leagal Template 5"])
-    const [complianceTemp,setComplianceTemp]=useState(["Compliance Template 1","Compliance Template 2","Compliance Template 3","Compliance Template 4","Compliance Template 5"])
+    const [leagalTemp,setLeagalTemp]=useState([])
+    const [complianceTemp,setComplianceTemp]=useState([])
 
         useEffect(()=>{
             backend.get("api/important_docs/getfiles").then((res)=>{
