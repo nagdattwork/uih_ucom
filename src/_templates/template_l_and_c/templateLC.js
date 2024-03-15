@@ -57,14 +57,14 @@ export default function TemplateLC() {
 
             
                 <h1 style={{backgroundColor:'#3f51b5',padding:"2px",color:"white", textAlign: 'center'}}>
-                    Leagal Templates- Global
+                    Legal Templates
                                     </h1>
                 <List>
                     {
                         leagalTemp.map((row,index)=>{
                             return (
                                 <>
-                                <ListItem> {"Leagal Template "+(index+1)}
+                                <ListItem> {"Legal Template "+(index+1)}
                             
                             <ListItemSecondaryAction>
                                 <IconButton color='info' onClick={()=>downloadFiles(row.path)}>
@@ -82,7 +82,7 @@ export default function TemplateLC() {
 
             <Grid item  xs={6} component={Paper}>
             <h1 style={{backgroundColor:'#3f51b5',padding:"2px",color:"white",alignContent:"center", textAlign: 'center'}}>
-                   Compliance-Templates
+                   Compliance Templates
                 </h1>
                 <List>
                     {

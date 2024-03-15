@@ -16,7 +16,7 @@ import { DataGrid, GridToolbar, gridClasses } from '@mui/x-data-grid';
 import { Avatar, Grid, IconButton, ListItem, ListItemAvatar, ListItemText, Tooltip } from '@mui/material';
 import ModeEditTwoToneIcon from '@mui/icons-material/ModeEditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
-import tableCSS from './table.css'
+import './table.css'
 import { Link, useNavigate } from 'react-router-dom';
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -233,7 +233,7 @@ const handleRowClick = (params) => {
         getRowClassName={(params) =>
           params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
         }
-       
+        className="MuiDataGrid-root" // Apply the styles to the DataGrid
         onRowClick={handleRowClick}
         slots={{ toolbar: GridToolbar }}
         slotProps={{
