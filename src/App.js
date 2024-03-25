@@ -55,7 +55,7 @@ function App() {
     // localStorage.removeItem('user')
 
     backend.get("https://open.larksuite.com/open-apis/authen/v1/authorize?app_id=cli_a5739c264af8d02f&redirect_uri=http://http://13.232.174.92/").then((res)=>{
-      alert(JSON.stringify(res))
+      console.log(JSON.stringify(res))
     })
     if (localStorage.getItem('user')) {
       const temp = JSON.parse(localStorage.getItem('user'))
