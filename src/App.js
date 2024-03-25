@@ -18,6 +18,7 @@ import FileUpload from './_templates/TesterTab/fileUpload';
 import Profile from './_templates/profile/profile';
 import CreateAccount from './_templates/profile/createAccount';
 import Account from './_templates/profile/account';
+import backend from './app/baseLink';
 
 // Define a custom theme
 
@@ -52,6 +53,10 @@ function App() {
   useEffect(() => {
 
     // localStorage.removeItem('user')
+
+    backend.get("https://open.larksuite.com/open-apis/authen/v1/authorize?app_id=cli_a5739c264af8d02f&redirect_uri=http://http://13.232.174.92/").then((res)=>{
+      alert(JSON.stringify(res))
+    })
     if (localStorage.getItem('user')) {
       const temp = JSON.parse(localStorage.getItem('user'))
       // console.log(temp)
